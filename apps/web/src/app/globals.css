@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  @apply bg-white text-brand-dark;
+  font-family: 'Stevie Sans', system-ui, sans-serif;
+}
+
+/* Brand typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Citrus Gothic', 'Stevie Sans', system-ui, sans-serif;
+  font-weight: 900; /* Black weight for headings */
+}
+
+/* Subtle grid alignment helpers */
+.container-page {
+  @apply mx-auto w-full max-w-6xl px-4 md:px-6;
+}

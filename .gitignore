@@ -1,18 +1,22 @@
-# Dependencies
 node_modules/
-
-# Build output
+.next/
+out/
+.turbo/
 dist/
 .sanity/
 
-# Environment and secrets
+# env (keep examples)
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!.env.*.example
 
-# Logs and OS
-*.log
+# logs / misc
+npm-debug.log*
+pnpm-debug.log*
 .DS_Store
 
-# Lockfile at root if you prefer not to commit it (optional; remove to track it)
-# package-lock.json
+# avoid mixed package managers
+package-lock.json
+yarn.lock
+npm-shrinkwrap.json
