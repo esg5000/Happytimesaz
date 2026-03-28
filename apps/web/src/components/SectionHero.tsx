@@ -1,6 +1,7 @@
 import type React from "react"
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
+import { isSanityCdnUrl } from '@/lib/sanity/image'
 
 export function SectionHero({
   title,
@@ -15,8 +16,8 @@ export function SectionHero({
 }) {
   return (
     <section className={cn(
-      "relative border-b border-brand-orange/20 overflow-hidden",
-      heroImage ? "min-h-[250px] md:min-h-[300px]" : "bg-gradient-to-br from-brand-orange/10 via-brand-orange/5 to-white"
+      'relative overflow-hidden border-b border-az-sand/80',
+      heroImage ? 'min-h-[250px] md:min-h-[300px]' : 'bg-gradient-to-br from-az-terracotta/12 via-az-cream to-az-cream-dark/40'
     )}>
       {/* Hero Image Background */}
       {heroImage && (
@@ -29,6 +30,7 @@ export function SectionHero({
             priority
             quality={90}
             sizes="100vw"
+            unoptimized={isSanityCdnUrl(heroImage)}
           />
           {/* Overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/30 to-black/20"></div>
@@ -39,14 +41,14 @@ export function SectionHero({
         <div>
           <h1 className={cn(
             "text-3xl font-black tracking-tight md:text-4xl",
-            heroImage ? "text-white drop-shadow-lg" : "text-brand-dark"
+            heroImage ? 'text-white drop-shadow-lg' : 'text-az-ink'
           )}>
             {title}
           </h1>
           {subtitle && (
             <p className={cn(
               "mt-2 max-w-2xl",
-              heroImage ? "text-white/90 drop-shadow-md" : "text-brand-dark/70"
+              heroImage ? 'text-white/90 drop-shadow-md' : 'text-az-ink-muted'
             )}>
               {subtitle}
             </p>

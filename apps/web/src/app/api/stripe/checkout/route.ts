@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     if (!stripeSecret) {
       return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
     }
-    const stripe = new Stripe(stripeSecret, { apiVersion: '2024-06-20' })
+    const stripe = new Stripe(stripeSecret, { apiVersion: '2025-02-24.acacia' })
 
     const body = BodySchema.parse(await req.json())
     const product = AD_PRODUCTS.find((p) => p.sku === body.sku)

@@ -6,8 +6,9 @@ import { safeFetch } from '@/lib/sanity/safeFetch'
 import { q } from '@/lib/sanity/queries'
 import type { Deal, Listing } from '@/types/content'
 
-export default async function ListingPage({ params }: { params: { slug: string } }) {
-  const listing = await safeFetch<Listing | null>(q.listingBySlug, { slug: params.slug }, null)
+export default async function ListingPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const listing = await safeFetch<Listing | null>(q.listingBySlug, { slug }, null)
   if (!listing) return notFound()
 
   const deals = listing.listingType === 'dispensary'
@@ -95,10 +96,8 @@ export default async function ListingPage({ params }: { params: { slug: string }
             </div>
 
             <aside className="lg:col-span-4">
-              <div className="sticky top-20 grid gap-3">
-                <AdSlot type="INLINE" />
-                <AdSlot type="MID_FEED" />
-                <AdSlot type="END_CAP" />
+              <div className="sticky top-24">
+                <AdSlot placement="listing_sidebar_mpu" size="rectangle" variant="display" label="Advertisement" />
               </div>
             </aside>
           </div>

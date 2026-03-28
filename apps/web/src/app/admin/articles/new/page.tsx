@@ -31,8 +31,8 @@ export default function NewArticlePage() {
     <div className="min-h-screen bg-brand-light/30">
       <div className="container-page py-10">
         <div className="mb-8">
-          <h1 className="text-3xl font-black text-brand-dark">Create Manual Article</h1>
-          <p className="mt-2 text-brand-dark/70">Write local, location-specific content manually</p>
+          <h1 className="text-3xl font-black text-brand-dark">Create Article</h1>
+          <p className="mt-2 text-brand-dark/70">Draft content for Sanity (wire save to your dataset when ready)</p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
@@ -44,6 +44,7 @@ export default function NewArticlePage() {
                     Title *
                   </label>
                   <input
+                    suppressHydrationWarning
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -57,6 +58,7 @@ export default function NewArticlePage() {
                     Excerpt
                   </label>
                   <textarea
+                    suppressHydrationWarning
                     value={formData.excerpt}
                     onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                     rows={3}
@@ -70,6 +72,7 @@ export default function NewArticlePage() {
                     Content *
                   </label>
                   <textarea
+                    suppressHydrationWarning
                     value={formData.body}
                     onChange={(e) => setFormData({ ...formData, body: e.target.value })}
                     rows={20}
@@ -94,6 +97,7 @@ export default function NewArticlePage() {
                     Category
                   </label>
                   <select
+                    suppressHydrationWarning
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     className="w-full rounded-xl border border-brand-light px-4 py-2 text-sm outline-none focus:border-brand-orange"
@@ -113,6 +117,7 @@ export default function NewArticlePage() {
                     Status
                   </label>
                   <select
+                    suppressHydrationWarning
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                     className="w-full rounded-xl border border-brand-light px-4 py-2 text-sm outline-none focus:border-brand-orange"
@@ -128,6 +133,7 @@ export default function NewArticlePage() {
                     Tags (comma-separated)
                   </label>
                   <input
+                    suppressHydrationWarning
                     type="text"
                     value={formData.tags}
                     onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
@@ -147,6 +153,7 @@ export default function NewArticlePage() {
                     SEO Title
                   </label>
                   <input
+                    suppressHydrationWarning
                     type="text"
                     value={formData.seoTitle}
                     onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })}
@@ -160,6 +167,7 @@ export default function NewArticlePage() {
                     SEO Description
                   </label>
                   <textarea
+                    suppressHydrationWarning
                     value={formData.seoDescription}
                     onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
                     rows={3}
@@ -173,6 +181,7 @@ export default function NewArticlePage() {
                     SEO Keywords
                   </label>
                   <input
+                    suppressHydrationWarning
                     type="text"
                     value={formData.seoKeywords}
                     onChange={(e) => setFormData({ ...formData, seoKeywords: e.target.value })}
@@ -185,6 +194,7 @@ export default function NewArticlePage() {
 
             <div className="flex gap-3">
               <button
+                suppressHydrationWarning
                 onClick={handleSave}
                 disabled={saving || !formData.title || !formData.body}
                 className="flex-1 rounded-xl bg-brand-orange px-6 py-3 font-bold text-white hover:bg-brand-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -192,6 +202,7 @@ export default function NewArticlePage() {
                 {saving ? 'Saving...' : 'Save Draft'}
               </button>
               <button
+                suppressHydrationWarning
                 onClick={() => router.back()}
                 className="rounded-xl border border-brand-light px-6 py-3 font-bold text-brand-dark hover:bg-brand-light transition-colors"
               >

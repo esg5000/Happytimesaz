@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Post } from '@/types/content'
-import { getImageUrl } from '@/lib/sanity/image'
+import { getImageUrl, isSanityCdnUrl } from '@/lib/sanity/image'
+import { formatDateUtc } from '@/lib/date'
 
 interface EditorialHeroProps {
   item: {
@@ -9,6 +10,8 @@ interface EditorialHeroProps {
     excerpt?: string
     category?: string | { title?: string; slug?: { current: string } }
     heroImage?: any
+    image?: any
+    mainImage?: any
     slug?: { current: string }
     publishedAt?: string
     readTime?: number
@@ -40,7 +43,7 @@ export function EditorialHero({ item, href }: EditorialHeroProps) {
       <Link href={href || (item.slug?.current ? `/article/${item.slug.current}` : '#')} className="block">
         {/* Image */}
         {src ? (
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-brand-light">
+          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-az-sand/50">
             <Image
               src={src}
               alt={altText}
@@ -48,12 +51,13 @@ export function EditorialHero({ item, href }: EditorialHeroProps) {
               priority
               sizes="(max-width: 1024px) 100vw, 768px"
               className="object-cover transition-transform duration-300 group-hover:scale-105"
+              unoptimized={isSanityCdnUrl(src)}
             />
           </div>
         ) : (
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-brand-light/60">
+          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-az-sand/40">
             <div className="absolute inset-0 grid place-items-center">
-              <span className="text-sm text-brand-dark/40">No image available</span>
+              <span className="text-sm text-az-ink-muted">No image available</span>
             </div>
           </div>
         )}
@@ -63,7 +67,7 @@ export function EditorialHero({ item, href }: EditorialHeroProps) {
           {/* Category */}
           {categoryTitle && (
             <div className="mb-2">
-              <span className="inline-block rounded-full bg-brand-orange/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-orange">
+              <span className="inline-block rounded-full bg-az-terracotta/10 px-3 py-1 font-sans text-xs font-bold uppercase tracking-wide text-az-terracotta-deep">
                 {categoryTitle}
               </span>
             </div>
@@ -76,17 +80,17 @@ export function EditorialHero({ item, href }: EditorialHeroProps) {
 
           {/* Excerpt */}
           {item.excerpt && (
-            <p className="mt-3 text-lg text-brand-dark/70 line-clamp-2">
+            <p className="mt-3 font-sans text-lg text-az-ink-muted line-clamp-2">
               {item.excerpt}
             </p>
           )}
 
           {/* Byline */}
-          <div className="mt-4 flex items-center gap-4 text-sm text-brand-dark/60">
+          <div className="mt-4 flex items-center gap-4 font-sans text-sm text-az-ink-muted">
             {item.author && <span>{item.author}</span>}
             {item.publishedAt && (
               <time dateTime={item.publishedAt}>
-                {new Date(item.publishedAt).toLocaleDateString('en-US', {
+                {formatDateUtc(item.publishedAt, {
                   month: 'long',
                   day: 'numeric',
                   year: 'numeric'

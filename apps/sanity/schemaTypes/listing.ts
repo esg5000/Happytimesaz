@@ -21,7 +21,22 @@ export default defineType({
     defineField({ name: 'city', type: 'string' }),
     defineField({ name: 'address', type: 'string' }),
     defineField({ name: 'phone', type: 'string' }),
-    defineField({ name: 'website', type: 'url' }),
+    defineField({
+      name: 'website',
+      type: 'url',
+      validation: (r) =>
+        r.custom((value, ctx) => {
+          const listingType = (ctx.document as any)?.listingType
+          if (listingType === 'dispensary' && !value) return 'Website is required for dispensaries'
+          return true
+        })
+    }),
+    defineField({
+      name: 'location',
+      title: 'Location',
+      type: 'geopoint',
+      description: 'Used for “Near me” sorting on the Cannabis hub.'
+    }),
     defineField({ name: 'heroImage', type: 'image', options: { hotspot: true } }),
     defineField({ name: 'description', type: 'text', rows: 4 }),
     defineField({ name: 'hours', type: 'object', fields: [

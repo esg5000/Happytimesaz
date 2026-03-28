@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { PageScaffold } from '@/components/layout/PageScaffold'
 import { AdSlot } from '@/components/AdSlot'
+import type { ArticleCardModel } from '@/components/cards/ArticleCard'
 import { safeFetch } from '@/lib/sanity/safeFetch'
 import { q } from '@/lib/sanity/queries'
 import type { Listing, Post } from '@/types/content'
@@ -20,33 +21,22 @@ export default async function NightlifePage() {
     excerpt: 'Pick the vibe. Go.',
     category: 'Nightlife'
   }
-  const secondaryPosts = allPosts.slice(1, 30)
+  const gridItems = allPosts.slice(1, 30) as ArticleCardModel[]
 
   return (
     <PageScaffold
-      billboard={{
-        adSlot: {
-          size: '1920x400',
-          position: 'hero-takeover',
-          label: 'Featured Venue',
-          section: 'nightlife',
-          mobileSize: '320x50'
-        }
-      }}
+      billboard={{ placement: 'category_leaderboard', label: 'Advertisement' }}
       heroItem={heroPost}
-      secondaryItems={secondaryPosts}
+      editorialGrid={{
+        items: gridItems,
+        sponsoredPlacement: 'category_grid_sponsored',
+        nativePlacement: 'category_native_mid'
+      }}
       rightRail={{
-        adSlots: [
-          {
-            size: '300x600',
-            position: 'sidebar-sticky',
-            label: 'Happy Hour Specials',
-            section: 'nightlife',
-            sticky: true
-          }
+        adPlacements: [
+          { placement: 'category_sidebar_mpu', size: 'rectangle', variant: 'display', label: 'Advertisement' }
         ]
       }}
-      gridColumns={{ mobile: 2, tablet: 2, desktop: 3 }}
     >
       {/* Venue Listings */}
       <section className="mt-12 border-t border-brand-light pt-10">
@@ -56,13 +46,7 @@ export default async function NightlifePage() {
 
         {/* In-content top */}
         <div className="mb-6">
-          <AdSlot 
-            size="728x90" 
-            position="in-content-top" 
-            label="Drink Specials" 
-            section="nightlife"
-            mobileSize="320x50"
-          />
+          <AdSlot placement="nightlife_listings_top" size="leaderboard" variant="display" label="Advertisement" />
         </div>
 
         <div className="grid gap-3">
@@ -74,12 +58,7 @@ export default async function NightlifePage() {
               <div key={l?._id || idx}>
                 {isGridTile ? (
                   <div className="mb-3">
-                    <AdSlot 
-                      size="300x250" 
-                      position="grid-tile" 
-                      label="Best Bars" 
-                      section="nightlife"
-                    />
+                    <AdSlot placement="nightlife_grid_tile" size="rectangle" variant="display" label="Advertisement" />
                   </div>
                 ) : (
                   <div className="rounded-2xl border border-brand-light bg-white p-4 shadow-sm">
@@ -106,12 +85,7 @@ export default async function NightlifePage() {
                 {/* In-content mid */}
                 {isMid && (
                   <div className="mt-4">
-                    <AdSlot 
-                      size="300x250" 
-                      position="in-content-mid" 
-                      label="Event Promoter" 
-                      section="nightlife"
-                    />
+                    <AdSlot placement="nightlife_listings_mid" size="rectangle" variant="display" label="Advertisement" />
                   </div>
                 )}
               </div>
@@ -130,11 +104,21 @@ export default async function NightlifePage() {
           {(posts.length ? posts.slice(0, 4) : dummyArticles.nightlife).map((p, idx) => {
             const article = posts.length ? p : dummyArticles.nightlife[idx]
             return (
-              <div key={p?._id || `dummy-${idx}`} className="rounded-2xl border border-brand-light bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div
+                key={p && '_id' in p && p._id ? p._id : `nightlife-${idx}`}
+                className="rounded-2xl border border-brand-light bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
+              >
                 <div className="text-sm font-bold text-brand-dark">{article.title || p?.title || 'Nightlife article'}</div>
                 <p className="mt-2 text-sm text-brand-dark/70 line-clamp-2 leading-relaxed">{article.excerpt || p?.excerpt || 'Excerpt'}</p>
                 <div className="mt-3">
-                  <Link href={p?.slug?.current ? `/article/${p.slug.current}` : '#'} className="text-sm font-bold text-brand-orange hover:underline">Read →</Link>
+                  <Link
+                    href={
+                      p && 'slug' in p && p.slug?.current ? `/article/${p.slug.current}` : '#'
+                    }
+                    className="text-sm font-bold text-brand-orange hover:underline"
+                  >
+                    Read →
+                  </Link>
                 </div>
               </div>
             )
@@ -143,14 +127,8 @@ export default async function NightlifePage() {
       </section>
 
       {/* Footer Banner */}
-      <section className="mt-12 border-t border-brand-light pt-6">
-        <AdSlot 
-          size="970x90" 
-          position="footer-banner" 
-          label="Rideshare Partners" 
-          section="nightlife"
-          mobileSize="320x50"
-        />
+      <section className="mt-12 border-t border-az-sand/80 pt-6">
+        <AdSlot placement="nightlife_footer_leaderboard" size="leaderboard" variant="display" label="Advertisement" />
       </section>
     </PageScaffold>
   )

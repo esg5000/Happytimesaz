@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Volume2, VolumeX, Pause, Play, Radio } from 'lucide-react'
+import Link from 'next/link'
+import { ChevronUp, Volume2, VolumeX, Pause, Play, Radio } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getMergedStations, type RadioStation } from '@/lib/sanity/stations'
 
@@ -402,125 +403,144 @@ export function RadioPlayer() {
 
   return (
     <>
-      {/* Audio element for streaming radio stations */}
-      {/* Note: crossOrigin removed - many streams don't support it and it can cause CORS errors */}
-      <audio 
-        ref={audioRef} 
-        preload="none"
-        playsInline
-      />
+      <audio ref={audioRef} preload="none" playsInline />
 
-      <div className={cn('fixed bottom-4 right-4 z-50')}> 
-        <div className="w-[320px] rounded-2xl border border-slate-200 bg-white shadow-lg">
-          <div className="flex items-center justify-between px-3 py-2">
-            <div className="flex items-center gap-2">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-slate-900 text-white">
-                <Radio className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-sm font-semibold leading-tight">Glass Radio</div>
-                <div className="text-xs text-slate-500 leading-tight">{current?.name || 'Station 1'}</div>
-              </div>
+      {open ? (
+        <div
+          className="fixed inset-x-0 bottom-[var(--radio-bar-h)] z-[190] max-h-[min(50vh,24rem)] overflow-y-auto border-t border-az-sand bg-az-cream/98 px-4 py-4 shadow-[0_-12px_40px_rgba(26,20,18,0.12)] backdrop-blur-md md:px-6"
+          role="dialog"
+          aria-label="Stations and volume"
+        >
+          {error ? (
+            <div className="mb-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2">
+              <p className="text-xs text-red-800">{error}</p>
             </div>
+          ) : null}
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setOpen((v) => !v)}
-                className="rounded-xl border border-slate-200 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-              >
-                {open ? 'Hide' : 'Stations'}
-              </button>
-              <button
-                onClick={togglePlay}
-                className="grid h-9 w-9 place-items-center rounded-xl bg-brand-orange-500 text-white hover:bg-brand-orange-600"
-                aria-label={playing ? 'Pause' : 'Play'}
-              >
-                {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-              </button>
+          {loading ? (
+            <div className="py-6 text-center font-sans text-sm text-az-ink-muted">Loading stations…</div>
+          ) : stations.length === 0 ? (
+            <div className="py-6 text-center font-sans text-sm text-az-ink-muted">
+              No stations configured. Set{' '}
+              <code className="rounded bg-az-sand px-1 text-xs">NEXT_PUBLIC_RADIO_STATION_1_URL</code> in{' '}
+              <code className="rounded bg-az-sand px-1 text-xs">.env.local</code>.
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+              {stations.map((s) => (
+                <button
+                  key={s.id}
+                  suppressHydrationWarning
+                  type="button"
+                  onClick={() => changeStation(s.id)}
+                  className={cn(
+                    'rounded-xl border px-3 py-2.5 text-left font-sans text-xs font-semibold transition',
+                    stationId === s.id
+                      ? 'border-az-terracotta bg-az-terracotta/10 text-az-terracotta-deep'
+                      : 'border-az-sand bg-white text-az-ink hover:border-az-terracotta/40'
+                  )}
+                  title={s.genre ? `${s.name} • ${s.genre}` : s.name}
+                >
+                  {s.name}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-4 flex items-center gap-3 border-t border-az-sand/80 pt-4">
+            <button
+              suppressHydrationWarning
+              type="button"
+              onClick={() => setVolume((v) => (v === 0 ? 0.8 : 0))}
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-az-sand bg-white text-az-ink hover:bg-az-cream-dark"
+              aria-label={isMuted ? 'Unmute' : 'Mute'}
+            >
+              {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+            </button>
+            <input
+              suppressHydrationWarning
+              type="range"
+              min={0}
+              max={1}
+              step={0.01}
+              value={volume}
+              onChange={(e) => setVolume(Number(e.target.value))}
+              className="h-2 w-full accent-az-terracotta"
+              aria-label="Volume"
+            />
+          </div>
+
+          {!current?.url ? (
+            <p className="mt-3 font-sans text-xs text-az-ink-muted">
+              Configure stream URLs in <code className="rounded bg-az-sand px-1">apps/web/.env.local</code>.
+            </p>
+          ) : null}
+
+          {process.env.NODE_ENV === 'development' ? (
+            <details className="mt-3 font-sans text-xs text-az-ink-muted">
+              <summary className="cursor-pointer">Debug</summary>
+              <pre className="mt-2 overflow-x-auto rounded-lg bg-az-sand/50 p-2 text-[10px]">
+                {JSON.stringify(
+                  {
+                    station: current?.name,
+                    playing,
+                    stations: stations.length
+                  },
+                  null,
+                  2
+                )}
+              </pre>
+            </details>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="fixed bottom-0 left-0 right-0 z-[195] border-t border-white/10 bg-az-ink/96 pb-[max(8px,env(safe-area-inset-bottom,0px))] text-az-cream shadow-[0_-8px_32px_rgba(26,20,18,0.25)] backdrop-blur-md">
+        <div className="container-page flex min-h-[var(--radio-bar-h)] items-center gap-3 py-2 md:gap-4 md:py-2.5">
+          <Link
+            href="/gta-radio"
+            className="hidden shrink-0 items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 font-sans text-[10px] font-bold uppercase tracking-[0.18em] text-az-gold transition hover:border-az-gold/50 sm:flex"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-40" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+            </span>
+            GTA Radio
+          </Link>
+
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-az-terracotta text-white shadow-md">
+              <Radio className="h-5 w-5" aria-hidden />
+            </div>
+            <div className="min-w-0">
+              <p className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-az-gold/90">
+                {playing ? 'Live' : 'Ready'}
+              </p>
+              <p className="truncate font-sans text-sm font-semibold leading-tight">{current?.name || 'Select a station'}</p>
             </div>
           </div>
 
-          {open && (
-            <div className="border-t border-slate-200 px-3 py-3">
-              {error && (
-                <div className="mb-3 rounded-lg bg-red-50 border border-red-200 px-3 py-2">
-                  <p className="text-xs text-red-700">{error}</p>
-                </div>
-              )}
-              
-              {loading ? (
-                <div className="py-4 text-center text-xs text-slate-500">
-                  Loading stations...
-                </div>
-              ) : stations.length === 0 ? (
-                <div className="py-4 text-center text-xs text-slate-500">
-                  No stations configured. Set NEXT_PUBLIC_RADIO_STATION_1_NAME and NEXT_PUBLIC_RADIO_STATION_1_URL in .env.local
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-2">
-                  {stations.map((s) => (
-                    <button
-                      key={s.id}
-                      onClick={() => changeStation(s.id)}
-                      className={cn(
-                        'rounded-xl border px-3 py-2 text-left text-xs font-semibold',
-                        stationId === s.id
-                          ? 'border-brand-orange-500 bg-brand-orange-50 text-brand-orange-700'
-                          : 'border-slate-200 bg-white text-slate-800 hover:bg-slate-50'
-                      )}
-                      title={s.genre ? `${s.name} • ${s.genre}` : s.name}
-                    >
-                      {s.name}
-                      {s.source === 'sanity' && (
-                        <span className="ml-1 text-[10px] text-slate-400">•</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              <div className="mt-3 flex items-center gap-3">
-                <button
-                  onClick={() => setVolume((v) => (v === 0 ? 0.8 : 0))}
-                  className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 hover:bg-slate-50"
-                  aria-label={isMuted ? 'Unmute' : 'Mute'}
-                >
-                  {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-                </button>
-                <input
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={volume}
-                  onChange={(e) => setVolume(Number(e.target.value))}
-                  className="w-full"
-                />
-              </div>
-
-              {!current.url && (
-                <p className="mt-3 text-xs text-slate-500">
-                  Configure station stream URLs in <code className="rounded bg-slate-100 px-1">apps/web/.env.local</code>.
-                </p>
-              )}
-              
-              {/* Debug info - remove in production */}
-              {process.env.NODE_ENV === 'development' && (
-                <details className="mt-3 text-xs">
-                  <summary className="cursor-pointer text-slate-500">Debug Info</summary>
-                  <div className="mt-2 rounded bg-slate-100 p-2 font-mono text-[10px]">
-                    <div>Current Station: {current.name}</div>
-                    <div>Source: {current.source}</div>
-                    <div>URL: {current.url || 'Not set'}</div>
-                    <div>Playing: {playing ? 'Yes' : 'No'}</div>
-                    <div>Total stations: {stations.length}</div>
-                    <div>Fallback: {stations.filter(s => s.source === 'fallback').length}</div>
-                    <div>Sanity: {stations.filter(s => s.source === 'sanity').length}</div>
-                  </div>
-                </details>
-              )}
-            </div>
-          )}
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              suppressHydrationWarning
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              className="inline-flex h-10 items-center gap-1 rounded-full border border-white/15 px-3 font-sans text-xs font-bold uppercase tracking-wider text-az-cream hover:bg-white/10"
+              aria-expanded={open}
+            >
+              <ChevronUp className={cn('h-4 w-4 transition', open ? 'rotate-180' : '')} />
+              <span className="hidden sm:inline">{open ? 'Hide' : 'Stations'}</span>
+            </button>
+            <button
+              suppressHydrationWarning
+              type="button"
+              onClick={togglePlay}
+              className="grid h-11 w-11 place-items-center rounded-full bg-az-gold text-az-ink shadow-md transition hover:bg-white"
+              aria-label={playing ? 'Pause' : 'Play'}
+            >
+              {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 fill-current" />}
+            </button>
+          </div>
         </div>
       </div>
     </>

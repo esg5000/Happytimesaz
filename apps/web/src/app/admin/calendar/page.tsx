@@ -12,7 +12,6 @@ export default function ContentCalendarPage() {
     title: string
     date: Date
     category: string
-    source: 'manual' | 'writesonic'
     status: 'draft' | 'published' | 'scheduled'
   }> = []
 
@@ -60,22 +59,18 @@ export default function ContentCalendarPage() {
 
         <div className="rounded-xl border border-brand-light bg-white p-6 shadow-sm">
           <div className="mb-4">
-            <div className="flex items-center gap-4 mb-4">
+            <div className="mb-4 flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-blue-600"></div>
-                <span className="text-sm text-brand-dark">WriteSonic</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-purple-600"></div>
-                <span className="text-sm text-brand-dark">Manual</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-green-600"></div>
+                <div className="h-4 w-4 rounded bg-green-600" />
                 <span className="text-sm text-brand-dark">Published</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-brand-orange"></div>
+                <div className="h-4 w-4 rounded bg-brand-orange" />
                 <span className="text-sm text-brand-dark">Scheduled</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-4 w-4 rounded bg-purple-600" />
+                <span className="text-sm text-brand-dark">Draft</span>
               </div>
             </div>
           </div>

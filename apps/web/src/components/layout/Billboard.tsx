@@ -3,32 +3,26 @@ import { AdSlot } from '@/components/AdSlot'
 
 interface BillboardProps {
   children?: React.ReactNode
-  adSlot?: {
-    size: string
-    position: string
-    label: string
-    section: string
-    mobileSize?: string
-  }
+  /** Fetch ad from Sanity by placement (leaderboard / display). */
+  placement?: string
+  label?: string
 }
 
-export function Billboard({ children, adSlot }: BillboardProps) {
-  if (!children && !adSlot) return null
+export function Billboard({ children, placement, label }: BillboardProps) {
+  if (!children && !placement) return null
 
   return (
-    <section className="border-b border-brand-light bg-white">
-      <div className="container-page py-6">
-        {children || (adSlot && (
+    <section className="border-b border-az-sand/80 bg-white/90">
+      <div className="container-page py-6 md:py-8">
+        {children ?? (
           <AdSlot
-            size={adSlot.size}
-            position={adSlot.position}
-            label={adSlot.label}
-            section={adSlot.section}
-            mobileSize={adSlot.mobileSize}
+            placement={placement!}
+            size="leaderboard"
+            variant="display"
+            label={label ?? 'Advertisement'}
           />
-        ))}
+        )}
       </div>
     </section>
   )
 }
-

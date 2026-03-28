@@ -1,14 +1,17 @@
 export const q = {
   latestPosts: (categorySlug?: string) => {
     const catFilter = categorySlug ? `&& category->slug.current == "${categorySlug}"` : ''
-    return `*[_type=="post" ${catFilter}]|order(publishedAt desc)[0...30]{
+    // Newest first within the (optional) category filter; fall back if publishedAt is missing
+    return `*[_type=="post" ${catFilter}]|order(coalesce(publishedAt, _updatedAt) desc)[0...30]{
       _id,
       title,
       slug,
       excerpt,
       publishedAt,
       category->{title, slug},
-      heroImage{
+      "heroImage": coalesce(heroImage, mainImage){
+        hotspot,
+        crop,
         asset->{
           _id,
           url,
@@ -27,7 +30,9 @@ export const q = {
     excerpt,
     publishedAt,
     category->{title, slug},
-    heroImage{
+    "heroImage": coalesce(heroImage, mainImage){
+      hotspot,
+      crop,
       asset->{
         _id,
         url,
@@ -40,6 +45,8 @@ export const q = {
       ...,
       _type == "image" => {
         ...,
+        hotspot,
+        crop,
         asset->{
           _id,
           url,
@@ -58,7 +65,10 @@ export const q = {
     listingType,
     city,
     address,
-    heroImage{
+    location,
+    "heroImage": coalesce(heroImage, mainImage){
+      hotspot,
+      crop,
       asset->{
         _id,
         url,
@@ -80,7 +90,10 @@ export const q = {
     listingType,
     city,
     address,
-    heroImage{
+    location,
+    "heroImage": coalesce(heroImage, mainImage){
+      hotspot,
+      crop,
       asset->{
         _id,
         url,
@@ -107,7 +120,9 @@ export const q = {
     startDate,
     endDate,
     terms,
-    heroImage{
+    "heroImage": coalesce(heroImage, mainImage){
+      hotspot,
+      crop,
       asset->{
         _id,
         url,
@@ -126,6 +141,8 @@ export const q = {
     venueName,
     city,
     heroImage{
+      hotspot,
+      crop,
       asset->{
         _id,
         url,
@@ -143,6 +160,8 @@ export const q = {
     placement,
     adType,
     image{
+      hotspot,
+      crop,
       asset->{
         _id,
         url,
@@ -164,6 +183,8 @@ export const q = {
     active,
     order,
     coverImage{
+      hotspot,
+      crop,
       asset->{
         _id,
         url,
@@ -173,5 +194,56 @@ export const q = {
       }
     },
     genre
+  }`,
+  homepageSettings: `*[_type == "homepageSettings"]|order(_updatedAt desc)[0]{
+    featuredThemeLabel,
+    featuredHeadline,
+    featuredSubheadline,
+    featuredCtaLabel,
+    featuredCtaUrl,
+    featuredImage{
+      hotspot,
+      crop,
+      asset->{ _id, url }
+    },
+    tileTop{
+      title,
+      categoryTag,
+      linkUrl,
+      image{
+        hotspot,
+        crop,
+        asset->{ _id, url }
+      }
+    },
+    tileBottom{
+      title,
+      categoryTag,
+      linkUrl,
+      image{
+        hotspot,
+        crop,
+        asset->{ _id, url }
+      }
+    }
+  }`,
+  // Same category as the current article when $categorySlug is set; always newest-first by publish date
+  relatedPosts: `*[
+    _type == "post" &&
+    slug.current != $slug &&
+    (!defined($categorySlug) || category->slug.current == $categorySlug)
+  ]|order(coalesce(publishedAt, _updatedAt) desc)[0...8]{
+    _id,
+    title,
+    slug,
+    excerpt,
+    readTime,
+    publishedAt,
+    category->{title, slug},
+    "heroImage": coalesce(heroImage, mainImage){
+      hotspot,
+      crop,
+      asset->{ _id, url, metadata{ dimensions } }
+    }
   }`
 }

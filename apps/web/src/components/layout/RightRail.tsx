@@ -1,63 +1,69 @@
 import type React from 'react'
-import { AdSlot } from '@/components/AdSlot'
+import { AdSlot, type AdSlotSize, type AdSlotVariant } from '@/components/AdSlot'
 import Link from 'next/link'
 
+export type RightRailAdConfig = {
+  placement: string
+  size: AdSlotSize
+  variant?: AdSlotVariant
+  label?: string
+  sticky?: boolean
+}
+
 interface RightRailProps {
-  adSlots?: Array<{
-    size: string
-    position: string
-    label: string
-    section: string
-    sticky?: boolean
-  }>
+  adPlacements?: RightRailAdConfig[]
   widgets?: React.ReactNode[]
 }
 
-export function RightRail({ adSlots = [], widgets = [] }: RightRailProps) {
-  if (adSlots.length === 0 && widgets.length === 0) return null
+export function RightRail({ adPlacements = [], widgets = [] }: RightRailProps) {
+  if (adPlacements.length === 0 && widgets.length === 0) return null
 
   return (
     <aside className="hidden lg:block lg:col-span-3">
-      <div className="sticky top-20 space-y-6">
-        {/* Ad Slots */}
-        {adSlots.map((ad, idx) => (
+      <div className="sticky top-24 space-y-6">
+        {adPlacements.map((ad, idx) => (
           <AdSlot
-            key={idx}
+            key={`${ad.placement}-${idx}`}
+            placement={ad.placement}
             size={ad.size}
-            position={ad.position}
+            variant={ad.variant ?? 'display'}
             label={ad.label}
-            section={ad.section}
             sticky={ad.sticky}
           />
         ))}
 
-        {/* Widgets */}
         {widgets.map((widget, idx) => (
           <div key={idx}>{widget}</div>
         ))}
 
-        {/* Default Newsletter Widget if no widgets provided */}
-        {widgets.length === 0 && (
-          <div className="rounded-2xl border border-brand-light bg-white p-6 shadow-sm">
-            <h3 className="text-sm font-bold text-brand-dark">Newsletter</h3>
-            <p className="mt-2 text-xs text-brand-dark/70">Get Arizona drops delivered to your inbox.</p>
+        {widgets.length === 0 ? (
+          <div className="rounded-2xl border border-az-sand/90 bg-white p-6 shadow-card">
+            <h3 className="font-sans text-sm font-bold text-az-ink">Newsletter</h3>
+            <p className="mt-2 font-sans text-xs text-az-ink-muted">Arizona drops in your inbox.</p>
             <form className="mt-4 space-y-2">
               <input
+                suppressHydrationWarning
                 type="email"
                 placeholder="Email"
-                className="w-full rounded-lg border border-brand-light px-3 py-2 text-xs outline-none focus:border-brand-orange"
+                className="w-full rounded-xl border border-az-sand bg-az-cream px-3 py-2 font-sans text-xs outline-none ring-az-terracotta/25 focus:ring-2"
               />
               <button
-                type="submit"
-                className="w-full rounded-lg bg-brand-orange px-3 py-2 text-xs font-bold text-white hover:bg-brand-orange-600 transition-colors"
+                suppressHydrationWarning
+                type="button"
+                className="w-full rounded-xl bg-az-terracotta px-3 py-2 font-sans text-xs font-bold text-white transition hover:bg-az-terracotta-deep"
               >
                 Subscribe
               </button>
             </form>
+            <Link
+              href="/advertise"
+              className="mt-4 inline-block font-sans text-xs font-semibold text-az-terracotta hover:underline"
+            >
+              Advertise with us →
+            </Link>
           </div>
-        )}
+        ) : null}
       </div>
     </aside>
   )
 }
-

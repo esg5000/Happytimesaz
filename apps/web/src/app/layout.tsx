@@ -1,27 +1,35 @@
-import type React from "react"
+import type React from 'react'
 
 import type { Metadata } from 'next'
+import { DM_Sans, Fraunces } from 'next/font/google'
 import './globals.css'
-import { Header } from '@/components/Header'
 import { RadioPlayer } from '@/components/RadioPlayer'
+
+const fontSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap'
+})
+
+const fontDisplay = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap'
+})
 
 export const metadata: Metadata = {
   title: {
     default: 'HappytimesAZ',
     template: '%s · HappytimesAZ'
   },
-  description: 'Arizona discovery: cannabis, food, nightlife, events, and more.'
+  description:
+    'Arizona lifestyle: food, cannabis, nightlife, mushrooms, events, classes, and GTA Radio.'
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Note: Replace with actual font URLs when available, or use @font-face for local fonts */}
-      </head>
-      <body>
+    <html lang="en" className={`${fontSans.variable} ${fontDisplay.variable}`}>
+      <body suppressHydrationWarning data-radio-bar="true" className="min-h-screen">
         {children}
         <RadioPlayer />
       </body>

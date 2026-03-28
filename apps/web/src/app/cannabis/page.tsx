@@ -1,10 +1,14 @@
 import Link from 'next/link'
 import { PageScaffold } from '@/components/layout/PageScaffold'
 import { AdSlot } from '@/components/AdSlot'
+import type { ArticleCardModel } from '@/components/cards/ArticleCard'
 import { safeFetch } from '@/lib/sanity/safeFetch'
 import { q } from '@/lib/sanity/queries'
 import type { Deal, Listing, Post } from '@/types/content'
 import { dummyArticles } from '@/lib/dummy-content'
+import { DISPENSARY_REGIONS, getDispensariesByRegion } from '@/lib/dispensary-data'
+import { DealsGrid } from '@/components/cannabis/DealsGrid'
+import { DispensaryDirectory } from '@/components/cannabis/DispensaryDirectory'
 
 export const metadata = { title: 'Cannabis' }
 
@@ -15,158 +19,142 @@ export default async function CannabisPage() {
     safeFetch<Post[]>(q.latestPosts('cannabis'), undefined, [])
   ])
 
+  const dispensariesByRegion = getDispensariesByRegion()
   const allPosts = posts.length ? posts : dummyArticles.cannabis
   const heroPost = allPosts[0] || {
     title: 'Cannabis',
     excerpt: 'Dispensary directory + brand deals. Contextual monetization only.',
     category: 'Cannabis'
   }
-  const secondaryPosts = allPosts.slice(1, 30)
+  const gridItems = allPosts.slice(1, 30) as ArticleCardModel[]
 
   return (
     <PageScaffold
-      billboard={{
-        adSlot: {
-          size: '970x90',
-          position: 'top-leaderboard',
-          label: 'Dispensary Network',
-          section: 'cannabis',
-          mobileSize: '320x50'
-        }
-      }}
+      billboard={{ placement: 'category_leaderboard', label: 'Advertisement' }}
       heroItem={heroPost}
-      secondaryItems={secondaryPosts}
+      editorialGrid={{
+        items: gridItems,
+        sponsoredPlacement: 'category_grid_sponsored',
+        nativePlacement: 'category_native_mid'
+      }}
       rightRail={{
-        adSlots: [
-          {
-            size: '300x250',
-            position: 'sidebar-top',
-            label: 'Featured Dispensary #1',
-            section: 'cannabis'
-          },
-          {
-            size: '300x250',
-            position: 'sidebar-mid',
-            label: 'Featured Dispensary #2',
-            section: 'cannabis'
-          },
-          {
-            size: '300x250',
-            position: 'sidebar-bottom',
-            label: 'Featured Dispensary #3',
-            section: 'cannabis'
-          }
+        adPlacements: [
+          { placement: 'category_sidebar_mpu', size: 'rectangle', variant: 'display', label: 'Advertisement' }
         ]
       }}
-      gridColumns={{ mobile: 2, tablet: 3, desktop: 3 }}
     >
       {/* Featured Cannabis Deals */}
       <section className="mt-12 border-t border-brand-light pt-10">
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-brand-dark">Featured Cannabis Deals</h2>
-          <p className="mt-1 text-sm text-brand-dark/70">Deals live inside Cannabis. Always contextual.</p>
-        </div>
-        <div className="grid gap-3 md:grid-cols-3">
-          {(deals.length ? deals.slice(0, 6) : new Array(6).fill(null)).map((d, idx) => (
-            <div key={d?._id || idx} className="rounded-2xl border border-brand-light bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-xs font-semibold uppercase tracking-wide text-brand-orange/70">Sponsored</div>
-              <div className="mt-2 text-base font-semibold text-brand-dark">{d?.title || 'Deal Title'}</div>
-              <div className="mt-1 text-sm text-brand-dark/70">{d?.brandName || d?.dispensaryName || 'Brand / Dispensary'}</div>
-              <div className="mt-1 text-xs text-brand-dark/60">{d?.city || 'Phoenix, AZ'}</div>
-              <div className="mt-4 flex items-center justify-between">
-                {d?.link ? (
-                  <a className="text-sm font-bold text-brand-orange hover:underline" href={d.link} target="_blank" rel="noreferrer">
-                    Claim Deal
-                  </a>
-                ) : (
-                  <span className="text-sm text-brand-dark/40">Link pending</span>
-                )}
-                <span className="text-xs text-brand-dark/40">{d?.endDate ? `Ends ${new Date(d.endDate).toLocaleDateString()}` : ''}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+        <DealsGrid deals={deals} />
       </section>
 
-      {/* Top Dispensaries in Arizona */}
+      {/* Dispensary Directory */}
       <section className="mt-12 border-t border-brand-light pt-10">
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-brand-dark">Top Dispensaries in Arizona</h2>
-          <p className="mt-1 text-sm text-brand-dark/70">Find the best dispensaries across the state.</p>
+        <div className="mb-8">
+          <h2 className="font-display text-2xl font-bold text-brand-dark">Arizona Dispensary Directory</h2>
+          <p className="mt-2 text-sm text-brand-dark/70">
+            {listings.length
+              ? 'Find the best dispensaries across the state.'
+              : `${dispensariesByRegion ? Object.values(dispensariesByRegion).reduce((sum, arr) => sum + arr.length, 0) : 0}+ dispensaries listed statewide — updated regularly.`}
+          </p>
         </div>
-        <div className="grid gap-3">
-          {(listings.length ? listings : new Array(12).fill(null)).map((l, idx) => {
-            const isAfterSecond = idx === 1
-            const isAfterFifth = idx === 4
-            
-            return (
-              <div key={l?._id || idx}>
-                <div className="rounded-2xl border border-brand-light bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="text-base font-semibold text-brand-dark">{l?.name || 'Dispensary name'}</div>
-                      <div className="mt-1 text-sm text-brand-dark/70">{l?.city || 'Phoenix, AZ'}</div>
-                      <div className="mt-2 text-xs text-brand-dark/60">{l?.address || ''}</div>
-                      <div className="mt-3 flex gap-2">
-                        <span className="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-dark">
-                          Reviews (coming soon)
-                        </span>
-                        <span className="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-dark">
-                          Jobs (coming soon)
-                        </span>
+
+        {listings.length ? (
+          <>
+            <DispensaryDirectory listings={listings} />
+            <div className="mt-8">
+              <AdSlot placement="cannabis_listing_leaderboard" size="leaderboard" variant="display" label="Advertisement" />
+            </div>
+            <div className="mt-6">
+              <AdSlot placement="cannabis_listing_rectangle" size="rectangle" variant="display" label="Advertisement" />
+            </div>
+          </>
+        ) : (
+          /* Static dispensary directory organized by region */
+          <div className="space-y-10">
+            {DISPENSARY_REGIONS.map((region, regionIdx) => {
+              const entries = dispensariesByRegion[region]
+              if (!entries?.length) return null
+              return (
+                <div key={region}>
+                  {/* Region header */}
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="h-px flex-1 bg-brand-light" />
+                    <h3 className="shrink-0 rounded-full bg-brand-orange px-4 py-1 text-xs font-bold uppercase tracking-widest text-white">
+                      {region}
+                    </h3>
+                    <div className="h-px flex-1 bg-brand-light" />
+                  </div>
+
+                  {/* Dispensary cards for this region */}
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {entries.map((d) => (
+                      <div
+                        key={d.id}
+                        className="rounded-2xl border border-brand-light bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <div className="truncate text-sm font-semibold text-brand-dark">{d.name}</div>
+                            <div className="mt-0.5 text-xs text-brand-dark/60">{d.address}</div>
+                            <div className="mt-0.5 text-xs text-brand-dark/50">{d.city}, AZ</div>
+                          </div>
+                          <div className="shrink-0 flex flex-col gap-2 items-end">
+                            <a
+                              href={`tel:${d.phone.replace(/\D/g, '')}`}
+                              className="rounded-xl border border-brand-light px-3 py-1.5 text-xs font-semibold text-brand-dark hover:bg-brand-light transition-colors"
+                            >
+                              {d.phone}
+                            </a>
+                            <div className="flex gap-2">
+                              <a
+                                className="rounded-xl border border-brand-light px-3 py-1.5 text-xs font-semibold text-brand-dark hover:bg-brand-light transition-colors"
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${d.address}, ${d.city}, AZ`)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                Directions
+                              </a>
+                              <a
+                                className="rounded-xl bg-brand-orange px-3 py-1.5 text-xs font-bold text-white hover:bg-brand-orange-600 transition-colors"
+                                href={`https://www.google.com/search?q=${encodeURIComponent(`${d.name} ${d.city} AZ dispensary`)}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                Search
+                              </a>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex shrink-0 gap-2">
-                      {l?.website ? (
-                        <a className="rounded-xl border border-brand-light px-3 py-2 text-xs font-semibold hover:bg-brand-light transition-colors" href={l.website} target="_blank" rel="noreferrer">
-                          Website
-                        </a>
-                      ) : null}
-                      <Link className="rounded-xl bg-brand-orange px-3 py-2 text-xs font-bold text-white hover:bg-brand-orange-600 transition-colors" href={l?.slug?.current ? `/listing/${l.slug.current}` : '#'}>
-                        Details
-                      </Link>
-                    </div>
+                    ))}
                   </div>
+
+                  {/* In-feed ad after every 2nd region */}
+                  {regionIdx === 1 && (
+                    <div className="mt-6">
+                      <AdSlot placement="cannabis_listing_leaderboard" size="leaderboard" variant="display" label="Advertisement" />
+                    </div>
+                  )}
+                  {regionIdx === 4 && (
+                    <div className="mt-6">
+                      <AdSlot placement="cannabis_listing_rectangle" size="rectangle" variant="display" label="Advertisement" />
+                    </div>
+                  )}
                 </div>
-                
-                {/* In-feed after 2nd item */}
-                {isAfterSecond && (
-                  <div className="mt-4">
-                    <AdSlot 
-                      size="728x90" 
-                      position="in-feed" 
-                      label="Product Spotlight" 
-                      section="cannabis"
-                      mobileSize="320x50"
-                    />
-                  </div>
-                )}
-                
-                {/* In-feed after 5th item */}
-                {isAfterFifth && (
-                  <div className="mt-4">
-                    <AdSlot 
-                      size="300x250" 
-                      position="in-feed" 
-                      label="Brand Partnership" 
-                      section="cannabis"
-                    />
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        )}
       </section>
 
       {/* Footer Banner */}
-      <section className="mt-12 border-t border-brand-light pt-6">
-        <AdSlot 
-          size="970x90" 
-          position="footer-banner" 
-          label="Accessories/Services" 
-          section="cannabis"
-          mobileSize="320x50"
+      <section className="mt-12 border-t border-az-sand/80 pt-6">
+        <AdSlot
+          placement="cannabis_footer_leaderboard"
+          size="leaderboard"
+          variant="display"
+          label="Advertisement"
         />
       </section>
     </PageScaffold>

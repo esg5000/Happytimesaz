@@ -21,6 +21,7 @@ export type Listing = {
   listingType: 'food' | 'dispensary' | 'nightlife'
   city?: string
   address?: string
+  location?: { lat?: number; lng?: number }
   website?: string
   phone?: string
   description?: string
@@ -67,6 +68,24 @@ export type Ad = {
   cta?: string
   url?: string
   priority?: number
+}
+
+export type HomepageHeroTile = {
+  title?: string
+  categoryTag?: string
+  linkUrl?: string
+  image?: unknown
+}
+
+export type HomepageSettings = {
+  featuredThemeLabel?: string
+  featuredHeadline?: string
+  featuredSubheadline?: string
+  featuredCtaLabel?: string
+  featuredCtaUrl?: string
+  featuredImage?: unknown
+  tileTop?: HomepageHeroTile
+  tileBottom?: HomepageHeroTile
 }
 
 export type RadioStation = {

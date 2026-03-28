@@ -52,6 +52,7 @@ export default function AdvertisePage() {
               <div className="grid gap-3 md:grid-cols-2">
                 {products.map((p) => (
                   <button
+                    suppressHydrationWarning
                     key={p.sku}
                     onClick={() => setSelectedSku(p.sku)}
                     className={
@@ -86,24 +87,28 @@ export default function AdvertisePage() {
 
                 <div className="mt-6 grid gap-3">
                   <input
+                    suppressHydrationWarning
                     value={form.name}
                     onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                     placeholder="Your name"
                     className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                   <input
+                    suppressHydrationWarning
                     value={form.email}
                     onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                     placeholder="Email"
                     className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                   <input
+                    suppressHydrationWarning
                     value={form.business}
                     onChange={(e) => setForm((f) => ({ ...f, business: e.target.value }))}
                     placeholder="Business / Brand name"
                     className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-500"
                   />
                   <textarea
+                    suppressHydrationWarning
                     value={form.notes}
                     onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
                     placeholder="Notes (what you want to promote, city, dates, links...)"
@@ -112,6 +117,7 @@ export default function AdvertisePage() {
                 </div>
 
                 <button
+                  suppressHydrationWarning
                   onClick={startCheckout}
                   disabled={loading || !selectedSku}
                   className="mt-6 w-full rounded-xl bg-brand-500 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-600 disabled:opacity-50"

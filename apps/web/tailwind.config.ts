@@ -4,51 +4,75 @@ export default {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      spacing: {
+        // 8px base grid
+        18: '4.5rem',
+        22: '5.5rem'
+      },
+      maxWidth: {
+        content: '80rem'
+      },
       colors: {
+        // Legacy brand.* kept for gradual migration
         brand: {
-          // Primary brand colors from HappyTimes AZ brand book
           orange: {
-            DEFAULT: '#f3b237', // Primary orange/amber
-            50: '#fef8f0',
-            100: '#fdeee0',
-            200: '#fbd9b8',
-            300: '#f8be85',
-            400: '#f3b237', // Primary
-            500: '#e69a4f',
-            600: '#cc7a33',
-            700: '#b3621f',
-            800: '#944f1a',
-            900: '#7a4018'
+            DEFAULT: '#e85d2a',
+            50: '#fff4ed',
+            100: '#ffe6d5',
+            200: '#ffc9a8',
+            300: '#ffa270',
+            400: '#ff7a38',
+            500: '#e85d2a',
+            600: '#c94a1f',
+            700: '#a63c1c',
+            800: '#86331d',
+            900: '#6e2e1c'
           },
           dark: {
-            DEFAULT: '#1b1d1d', // Dark gray/black
-            50: '#f5f5f5',
-            100: '#e5e5e5',
-            200: '#cccccc',
-            300: '#b3b3b3',
-            400: '#999999',
-            500: '#808080',
-            600: '#666666',
-            700: '#4d4d4d',
-            800: '#333333',
-            900: '#1b1d1d' // Primary dark
+            DEFAULT: '#1a1412',
+            50: '#faf6f1',
+            100: '#f0ebe4',
+            200: '#ddd5cb',
+            300: '#c4b9ab',
+            400: '#9c8f7e',
+            500: '#7a6c5f',
+            600: '#5e5248',
+            700: '#4a4039',
+            800: '#2e2824',
+            900: '#1a1412'
           },
           light: {
-            DEFAULT: '#efefef', // Light gray/off-white
-            50: '#efefef',
-            100: '#f9f9f9',
-            200: '#f5f5f5'
-        }
+            DEFAULT: '#e8e0d8',
+            50: '#faf6f1',
+            100: '#f3ede6',
+            200: '#e8e0d8'
+          }
+        },
+        /** Arizona sunset system */
+        az: {
+          cream: '#faf6f1',
+          'cream-dark': '#f3ede6',
+          ink: '#1a1412',
+          'ink-muted': '#4a4039',
+          terracotta: '#e85d2a',
+          'terracotta-deep': '#c94a1f',
+          gold: '#d4a03c',
+          ember: '#b83226',
+          sand: '#e8e0d8'
         }
       },
       fontFamily: {
-        sans: ['Stevie Sans', 'system-ui', 'sans-serif'],
-        display: ['Citrus Gothic', 'Stevie Sans', 'system-ui', 'sans-serif']
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Georgia', 'serif']
       },
       fontWeight: {
         book: '400',
         bold: '700',
         black: '900'
+      },
+      boxShadow: {
+        card: '0 1px 0 rgba(26, 20, 18, 0.06), 0 8px 24px rgba(26, 20, 18, 0.08)',
+        lift: '0 12px 40px rgba(26, 20, 18, 0.12)'
       }
     }
   },

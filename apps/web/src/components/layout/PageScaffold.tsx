@@ -1,23 +1,17 @@
-import type React from 'react'
+import React, { type ReactNode } from 'react'
 import { UtilityBar } from './UtilityBar'
 import { SiteHeader } from './SiteHeader'
 import { Billboard } from './Billboard'
 import { EditorialHero } from './EditorialHero'
 import { SecondaryGrid } from './SecondaryGrid'
-import { RightRail } from './RightRail'
+import { EditorialGridWithAds } from '@/components/publication/EditorialGridWithAds'
+import { RightRail, type RightRailAdConfig } from './RightRail'
 import { SiteFooter } from './SiteFooter'
+import type { ArticleCardModel } from '@/components/cards/ArticleCard'
 
 interface PageScaffoldProps {
-  children?: React.ReactNode
-  billboard?: React.ReactNode | {
-    adSlot?: {
-      size: string
-      position: string
-      label: string
-      section: string
-      mobileSize?: string
-    }
-  }
+  children?: ReactNode
+  billboard?: React.ReactNode | { placement: string; label?: string }
   heroItem: {
     title: string
     excerpt?: string
@@ -29,7 +23,8 @@ interface PageScaffoldProps {
     author?: string
   }
   heroHref?: string
-  secondaryItems: Array<{
+  /** Legacy simple grid without sponsored slots — prefer `editorialGrid`. */
+  secondaryItems?: Array<{
     _id?: string
     title: string
     excerpt?: string
@@ -38,16 +33,18 @@ interface PageScaffoldProps {
     slug?: { current: string }
     publishedAt?: string
     readTime?: number
+    href?: string
+    meta?: string
   }>
+  /** Publication grid: every 6th sponsored + native row after two rows. */
+  editorialGrid?: {
+    items: ArticleCardModel[]
+    sponsoredPlacement: string
+    nativePlacement: string
+  }
   rightRail?: {
-    adSlots?: Array<{
-      size: string
-      position: string
-      label: string
-      section: string
-      sticky?: boolean
-    }>
-    widgets?: React.ReactNode[]
+    adPlacements?: RightRailAdConfig[]
+    widgets?: ReactNode[]
   }
   gridColumns?: {
     mobile?: number
@@ -61,7 +58,8 @@ export function PageScaffold({
   billboard,
   heroItem,
   heroHref,
-  secondaryItems,
+  secondaryItems = [],
+  editorialGrid,
   rightRail,
   gridColumns
 }: PageScaffoldProps) {
@@ -69,41 +67,50 @@ export function PageScaffold({
     <>
       <UtilityBar />
       <SiteHeader />
-      
-      {billboard && (
-        typeof billboard === 'object' && 'adSlot' in billboard ? (
-          <Billboard adSlot={billboard.adSlot} />
-        ) : (
-          <Billboard>{billboard}</Billboard>
-        )
-      )}
 
-      <main className="bg-white">
-        <section className="container-page py-10">
+      {billboard
+        ? React.isValidElement(billboard) ||
+          typeof billboard === 'string' ||
+          typeof billboard === 'number' ||
+          Array.isArray(billboard) ? (
+          <Billboard>{billboard}</Billboard>
+        ) : typeof billboard === 'object' &&
+          billboard !== null &&
+          'placement' in billboard &&
+          typeof (billboard as { placement: unknown }).placement === 'string' ? (
+          <Billboard
+            placement={(billboard as { placement: string }).placement}
+            label={(billboard as { label?: string }).label}
+          />
+        ) : (
+          <Billboard>{billboard as ReactNode}</Billboard>
+        )
+        : null}
+
+      <main className="bg-az-cream">
+        <section className="container-page py-10 md:py-12">
           <div className={rightRail ? 'grid gap-8 lg:grid-cols-12' : ''}>
-            {/* Main Content */}
             <div className={rightRail ? 'lg:col-span-9' : ''}>
-              {/* Editorial Hero */}
               <EditorialHero item={heroItem} href={heroHref} />
 
-              {/* Secondary Grid */}
-              {secondaryItems && secondaryItems.length > 0 && (
+              {editorialGrid ? (
+                <div className="mt-10">
+                  <EditorialGridWithAds
+                    items={editorialGrid.items}
+                    sponsoredPlacement={editorialGrid.sponsoredPlacement}
+                    nativePlacement={editorialGrid.nativePlacement}
+                  />
+                </div>
+              ) : secondaryItems.length > 0 ? (
                 <div className="mt-10">
                   <SecondaryGrid items={secondaryItems} columns={gridColumns} />
                 </div>
-              )}
+              ) : null}
 
-              {/* Custom children content */}
               {children}
             </div>
 
-            {/* Right Rail */}
-            {rightRail && (
-              <RightRail
-                adSlots={rightRail.adSlots}
-                widgets={rightRail.widgets}
-              />
-            )}
+            {rightRail ? <RightRail adPlacements={rightRail.adPlacements} widgets={rightRail.widgets} /> : null}
           </div>
         </section>
       </main>
@@ -112,4 +119,3 @@ export function PageScaffold({
     </>
   )
 }
-

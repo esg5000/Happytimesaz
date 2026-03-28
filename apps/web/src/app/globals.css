@@ -4,24 +4,68 @@
 
 :root {
   color-scheme: light;
+  --az-radius-card: 1rem;
+  --radio-bar-h: 4.5rem;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
-  @apply bg-white text-brand-dark;
-  font-family: 'Stevie Sans', system-ui, sans-serif;
+  @apply bg-az-cream text-az-ink antialiased;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Brand typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Citrus Gothic', 'Stevie Sans', system-ui, sans-serif;
-  font-weight: 900; /* Black weight for headings */
+/* Editorial display headlines */
+.font-display,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-/* Subtle grid alignment helpers */
-.container-page {
-  @apply mx-auto w-full max-w-6xl px-4 md:px-6;
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-content px-4 md:px-6 lg:px-8;
+  }
+
+  .section-label {
+    @apply font-sans text-xs font-bold uppercase tracking-[0.2em] text-az-terracotta;
+  }
+
+  .live-pulse::before {
+    content: '';
+    @apply absolute left-0 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-emerald-400;
+    animation: htaz-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes htaz-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translateY(-50%) scale(1.15);
+    }
+  }
+}
+
+/* Space for fixed bottom radio bar + home indicator on phones */
+body[data-radio-bar='true'] {
+  padding-bottom: calc(var(--radio-bar-h) + env(safe-area-inset-bottom, 0px));
+}
+
+@media (min-width: 768px) {
+  :root {
+    --radio-bar-h: 4.75rem;
+  }
 }

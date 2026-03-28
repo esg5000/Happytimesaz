@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { PageScaffold } from '@/components/layout/PageScaffold'
 import { AdSlot } from '@/components/AdSlot'
+import type { ArticleCardModel } from '@/components/cards/ArticleCard'
 import { safeFetch } from '@/lib/sanity/safeFetch'
 import { q } from '@/lib/sanity/queries'
 import type { Listing, Post } from '@/types/content'
@@ -20,32 +21,22 @@ export default async function FoodPage() {
     excerpt: 'AZ food directory first. Articles second.',
     category: 'Food'
   }
-  const secondaryPosts = allPosts.slice(1, 30)
+  const gridItems = allPosts.slice(1, 30) as ArticleCardModel[]
 
   return (
     <PageScaffold
-      billboard={{
-        adSlot: {
-          size: '970x250',
-          position: 'hero-banner',
-          label: 'Featured Restaurant',
-          section: 'food',
-          mobileSize: '320x50'
-        }
-      }}
+      billboard={{ placement: 'category_leaderboard', label: 'Advertisement' }}
       heroItem={heroPost}
-      secondaryItems={secondaryPosts}
+      editorialGrid={{
+        items: gridItems,
+        sponsoredPlacement: 'category_grid_sponsored',
+        nativePlacement: 'category_native_mid'
+      }}
       rightRail={{
-        adSlots: [
-          {
-            size: '300x250',
-            position: 'sidebar-mid',
-            label: 'Happy Hour Specials',
-            section: 'food'
-          }
+        adPlacements: [
+          { placement: 'category_sidebar_mpu', size: 'rectangle', variant: 'display', label: 'Advertisement' }
         ]
       }}
-      gridColumns={{ mobile: 2, tablet: 2, desktop: 3 }}
     >
       {/* Food Stories */}
       <section className="mt-12 border-t border-brand-light pt-10">
@@ -57,11 +48,21 @@ export default async function FoodPage() {
           {(posts.length ? posts.slice(0, 4) : dummyArticles.food).map((p, idx) => {
             const article = posts.length ? p : dummyArticles.food[idx]
             return (
-              <div key={p?._id || `dummy-${idx}`} className="rounded-2xl border border-brand-light bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+              <div
+                key={p && '_id' in p && p._id ? p._id : `food-story-${idx}`}
+                className="rounded-2xl border border-brand-light bg-white p-4 shadow-sm hover:shadow-md transition-shadow"
+              >
                 <div className="text-sm font-bold text-brand-dark">{article.title || p?.title || 'Food article'}</div>
                 <p className="mt-2 text-sm text-brand-dark/70 line-clamp-2 leading-relaxed">{article.excerpt || p?.excerpt || 'Excerpt'}</p>
                 <div className="mt-3">
-                  <Link href={p?.slug?.current ? `/article/${p.slug.current}` : '#'} className="text-sm font-bold text-brand-orange hover:underline">Read →</Link>
+                  <Link
+                    href={
+                      p && 'slug' in p && p.slug?.current ? `/article/${p.slug.current}` : '#'
+                    }
+                    className="text-sm font-bold text-brand-orange hover:underline"
+                  >
+                    Read →
+                  </Link>
                 </div>
               </div>
             )
@@ -77,12 +78,7 @@ export default async function FoodPage() {
         
         {/* In-content top */}
         <div className="mb-6">
-          <AdSlot 
-            size="300x250" 
-            position="in-content-top" 
-            label="Best Pizza / Quickest Delivery" 
-            section="food"
-          />
+          <AdSlot placement="food_in_content_top" size="rectangle" variant="display" label="Advertisement" />
         </div>
 
         <div className="grid gap-3">
@@ -115,25 +111,14 @@ export default async function FoodPage() {
                 {/* In-content mid */}
                 {isMid && (
                   <div className="mt-4">
-                    <AdSlot 
-                      size="728x90" 
-                      position="in-content-mid" 
-                      label="Food Delivery Apps" 
-                      section="food"
-                      mobileSize="320x50"
-                    />
+                    <AdSlot placement="food_in_content_mid" size="leaderboard" variant="display" label="Advertisement" />
                   </div>
                 )}
 
                 {/* In-content lower */}
                 {isLower && (
                   <div className="mt-4">
-                    <AdSlot 
-                      size="300x250" 
-                      position="in-content-lower" 
-                      label="Restaurant Week" 
-                      section="food"
-                    />
+                    <AdSlot placement="food_in_content_lower" size="rectangle" variant="display" label="Advertisement" />
                   </div>
                 )}
               </div>
@@ -142,15 +127,6 @@ export default async function FoodPage() {
         </div>
       </section>
 
-      {/* Bottom sticky mobile */}
-      <section className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-brand-light p-2">
-        <AdSlot 
-          size="320x50" 
-          position="bottom-sticky-mobile" 
-          label="Food Deals" 
-          section="food"
-        />
-      </section>
     </PageScaffold>
   )
 }

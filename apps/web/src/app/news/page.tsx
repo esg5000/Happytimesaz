@@ -1,6 +1,5 @@
-import Link from 'next/link'
 import { PageScaffold } from '@/components/layout/PageScaffold'
-import { AdSlot } from '@/components/AdSlot'
+import type { ArticleCardModel } from '@/components/cards/ArticleCard'
 import { safeFetch } from '@/lib/sanity/safeFetch'
 import { q } from '@/lib/sanity/queries'
 import type { Post } from '@/types/content'
@@ -17,35 +16,30 @@ export default async function NewsPage() {
     excerpt: 'Latest stories across cannabis, food, nightlife, events, and more.',
     category: 'News'
   }
-  const secondaryPosts = allPosts.slice(1, 30)
+  const gridItems = allPosts.slice(1, 30) as ArticleCardModel[]
 
   return (
     <PageScaffold
       billboard={{
-        adSlot: {
-          size: '970x90',
-          position: 'top-leaderboard',
-          label: 'Major Sponsors',
-          section: 'news',
-          mobileSize: '320x50'
-        }
+        placement: 'category_leaderboard',
+        label: 'Advertisement'
       }}
       heroItem={heroPost}
-      secondaryItems={secondaryPosts}
+      editorialGrid={{
+        items: gridItems,
+        sponsoredPlacement: 'category_grid_sponsored',
+        nativePlacement: 'category_native_mid'
+      }}
       rightRail={{
-        adSlots: [
+        adPlacements: [
           {
-            size: '300x600',
-            position: 'sidebar-sticky',
-            label: 'Premium Sponsor',
-            section: 'news',
-            sticky: true
+            placement: 'category_sidebar_mpu',
+            size: 'rectangle',
+            variant: 'display',
+            label: 'Advertisement'
           }
         ]
       }}
-      gridColumns={{ mobile: 2, tablet: 2, desktop: 3 }}
-    >
-      {/* In-feed ads are handled within the grid items */}
-    </PageScaffold>
+    />
   )
 }
