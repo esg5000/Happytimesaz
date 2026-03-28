@@ -1,6 +1,0 @@
-{
-  "buildCommand": "pnpm --filter @happytimesaz/web run build",
-  "outputDirectory": "apps/web/.next",
-  "installCommand": "pnpm install --frozen-lockfile",
-  "framework": "nextjs"
-}
