@@ -11,6 +11,9 @@ dist/
 !.env.example
 !.env.*.example
 
+# TypeScript
+*.tsbuildinfo
+
 # logs / misc
 npm-debug.log*
 pnpm-debug.log*
