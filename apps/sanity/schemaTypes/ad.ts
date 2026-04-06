@@ -16,7 +16,7 @@ export default defineType({
       title: 'title',
       advertiser: 'advertiser',
       placement: 'placement',
-      active: 'active',
+      active: 'isActive',
       image: 'image'
     },
     prepare({ title, advertiser, placement, active, image }) {
@@ -34,6 +34,20 @@ export default defineType({
       title: 'Title',
       description: 'Internal reference name for this ad',
       validation: (r) => r.required()
+    }),
+    defineField({
+      name: 'linkUrl',
+      type: 'url',
+      title: 'Link URL',
+      description: 'Destination URL when ad is clicked',
+      validation: (r) => r.uri({ scheme: ['http', 'https'] })
+    }),
+    defineField({
+      name: 'targetCategories',
+      type: 'array',
+      title: 'Target Categories',
+      description: 'Optional: Limit this ad to specific categories (slugs or names)',
+      of: [{ type: 'string' }]
     }),
     defineField({
       name: 'advertiser',
@@ -142,13 +156,13 @@ export default defineType({
     }),
     defineField({
       name: 'startDate',
-      type: 'datetime',
+      type: 'date',
       title: 'Start Date',
       description: 'Optional: When this ad should start showing'
     }),
     defineField({
       name: 'endDate',
-      type: 'datetime',
+      type: 'date',
       title: 'End Date',
       description: 'Optional: When this ad should stop showing'
     }),
@@ -161,17 +175,32 @@ export default defineType({
       validation: (r) => r.min(0).max(100)
     }),
     defineField({
-      name: 'active',
+      name: 'isActive',
       type: 'boolean',
-      title: 'Active',
+      title: 'Is Active',
       description: 'Whether this ad is currently active',
       initialValue: true
     }),
     defineField({
+      name: 'active',
+      type: 'boolean',
+      title: 'Active (legacy)',
+      readOnly: true,
+      hidden: true
+    }),
+    defineField({
+      name: 'url',
+      type: 'url',
+      title: 'URL (legacy)',
+      readOnly: true,
+      hidden: true
+    }),
+    defineField({
       name: 'categories',
       type: 'array',
-      title: 'Categories',
-      description: 'Optional: Limit this ad to specific content categories',
+      title: 'Categories (legacy)',
+      readOnly: true,
+      hidden: true,
       of: [{ type: 'reference', to: [{ type: 'category' }] }]
     })
   ]
