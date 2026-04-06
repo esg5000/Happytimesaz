@@ -10,7 +10,7 @@ function adToPartnerCard(ad: NonNullable<Awaited<ReturnType<typeof getAdByPlacem
     title: ad.headline || ad.title,
     excerpt: ad.advertiser,
     heroImage: ad.image,
-    href: ad.url || '#'
+    href: ad.linkUrl || '#'
   }
 }
 

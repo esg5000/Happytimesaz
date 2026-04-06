@@ -148,13 +148,6 @@ export default defineType({
       initialValue: 'Learn More'
     }),
     defineField({
-      name: 'url',
-      type: 'url',
-      title: 'URL',
-      description: 'Destination URL when ad is clicked',
-      validation: (r) => r.uri({ scheme: ['http', 'https'] })
-    }),
-    defineField({
       name: 'startDate',
       type: 'date',
       title: 'Start Date',
@@ -185,13 +178,6 @@ export default defineType({
       name: 'active',
       type: 'boolean',
       title: 'Active (legacy)',
-      readOnly: true,
-      hidden: true
-    }),
-    defineField({
-      name: 'url',
-      type: 'url',
-      title: 'URL (legacy)',
       readOnly: true,
       hidden: true
     }),

@@ -117,7 +117,7 @@ export function AdRenderer({
         {(ad.headline || ad.cta) && size === 'native-card' ? (
           <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-az-ink/80 via-az-ink/20 to-transparent p-4">
             {ad.headline ? <p className="font-display text-lg font-bold text-white">{ad.headline}</p> : null}
-            {ad.cta && ad.url ? (
+            {ad.cta && ad.linkUrl ? (
               <span className="mt-2 inline-flex w-fit rounded-full bg-az-gold px-4 py-2 font-sans text-xs font-bold text-az-ink">
                 {ad.cta}
               </span>
@@ -127,8 +127,8 @@ export function AdRenderer({
       </div>
     )
 
-    const linked = ad.url ? (
-      <Link href={ad.url} target="_blank" rel="noopener noreferrer sponsored" className="block">
+    const linked = ad.linkUrl ? (
+      <Link href={ad.linkUrl} target="_blank" rel="noopener noreferrer sponsored" className="block">
         {img}
       </Link>
     ) : (
@@ -141,9 +141,9 @@ export function AdRenderer({
         {size !== 'native-card' && ad.headline ? (
           <p className="font-sans text-sm font-semibold text-az-ink">{ad.headline}</p>
         ) : null}
-        {size !== 'native-card' && ad.cta && ad.url ? (
+        {size !== 'native-card' && ad.cta && ad.linkUrl ? (
           <Link
-            href={ad.url}
+            href={ad.linkUrl}
             target="_blank"
             rel="noopener noreferrer sponsored"
             className="inline-flex rounded-full bg-az-terracotta px-4 py-2 font-sans text-xs font-bold text-white"

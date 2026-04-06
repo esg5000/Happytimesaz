@@ -134,9 +134,9 @@ export default defineType({
       initialValue: 'Learn More'
     }),
     defineField({
-      name: 'url',
+      name: 'linkUrl',
       type: 'url',
-      title: 'URL',
+      title: 'Link URL',
       description: 'Destination URL when ad is clicked',
       validation: (r) => r.uri({ scheme: ['http', 'https'] })
     }),

@@ -9,7 +9,7 @@ function adToArticleModel(ad: Ad): ArticleCardModel {
     title: ad.headline || ad.title,
     excerpt: ad.advertiser,
     heroImage: ad.image,
-    href: ad.url || '#'
+    href: ad.linkUrl || '#'
   }
 }
 

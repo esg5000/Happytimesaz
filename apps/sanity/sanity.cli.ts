@@ -8,7 +8,7 @@ export default defineCliConfig({
     dataset: 'production'
   },
   deployment: {
-    appId: 'ralpb442xtu3x8z0w77zh00n'
+    appId: 'ralpb442xtu3x8z0w77zh0on'
   },
   vite: (config) => mergeConfig(config, studioViteConfig)
 })

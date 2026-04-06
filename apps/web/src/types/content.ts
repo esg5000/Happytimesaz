@@ -66,7 +66,7 @@ export type Ad = {
   html?: string
   headline?: string
   cta?: string
-  url?: string
+  linkUrl?: string
   priority?: number
 }
 

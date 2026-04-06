@@ -153,7 +153,7 @@ export const q = {
     },
     link
   }`,
-  adByPlacement: (placement: string) => `*[_type=="ad" && placement == $placement && active == true && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())]|order(priority desc)[0]{
+  adByPlacement: (placement: string) => `*[_type=="ad" && placement == $placement && (isActive == true || active == true) && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())]|order(priority desc)[0]{
     _id,
     title,
     advertiser,
@@ -173,7 +173,7 @@ export const q = {
     html,
     headline,
     cta,
-    url,
+    linkUrl,
     priority
   }`,
   activeRadioStations: `*[_type=="radioStation" && active == true]|order(order asc){
