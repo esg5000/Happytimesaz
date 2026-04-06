@@ -49,10 +49,20 @@ export type Event = {
   _id: string
   title: string
   slug: Slug
+  /** Start time; GROQ uses coalesce(date, dateTime) */
   dateTime: string
+  endDate?: string
   venueName?: string
+  address?: string
   city?: string
+  description?: string
   link?: string
+  ticketUrl?: string
+  price?: string
+  categories?: string[]
+  featured?: boolean
+  isActive?: boolean
+  source?: string
   heroImage?: any
 }
 

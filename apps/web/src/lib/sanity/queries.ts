@@ -133,14 +133,17 @@ export const q = {
     },
     link
   }`,
-  eventsUpcoming: `*[_type=="event" && dateTime >= now()]|order(dateTime asc)[0...30]{
+  eventsUpcoming: `*[_type=="event" && coalesce(isActive, true) != false && coalesce(date, dateTime) >= now()]|order(coalesce(date, dateTime) asc)[0...30]{
     _id,
     title,
     slug,
-    dateTime,
-    venueName,
+    "dateTime": coalesce(date, dateTime),
+    endDate,
+    "venueName": coalesce(venue, venueName),
+    address,
     city,
-    heroImage{
+    description,
+    "heroImage": coalesce(image, heroImage){
       hotspot,
       crop,
       asset->{
@@ -151,7 +154,13 @@ export const q = {
         }
       }
     },
-    link
+    "link": coalesce(ticketUrl, link),
+    ticketUrl,
+    price,
+    categories,
+    featured,
+    isActive,
+    source
   }`,
   adByPlacement: (placement: string) => `*[_type=="ad" && placement == $placement && (isActive == true || active == true) && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())]|order(priority desc)[0]{
     _id,
