@@ -106,6 +106,12 @@ export default defineType({
       title: 'Source',
       description: 'e.g. Eventbrite, manual',
       placeholder: 'manual'
+    }),
+    defineField({
+      name: 'eventbriteEventId',
+      type: 'string',
+      title: 'Eventbrite event ID',
+      description: 'Stable ID from Eventbrite for tracking and deduplication when syncing imports'
     })
   ]
 })

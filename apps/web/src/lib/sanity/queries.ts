@@ -160,7 +160,8 @@ export const q = {
     categories,
     featured,
     isActive,
-    source
+    source,
+    eventbriteEventId
   }`,
   adByPlacement: (placement: string) => `*[_type=="ad" && placement == $placement && (isActive == true || active == true) && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())]|order(priority desc)[0]{
     _id,

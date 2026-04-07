@@ -63,6 +63,7 @@ export type Event = {
   featured?: boolean
   isActive?: boolean
   source?: string
+  eventbriteEventId?: string
   heroImage?: any
 }
 
