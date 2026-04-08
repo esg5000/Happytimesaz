@@ -6,6 +6,7 @@ const categoryOptions = [
   { title: 'Cannabis', value: 'cannabis' },
   { title: 'Arts', value: 'arts' },
   { title: 'Nightlife', value: 'nightlife' },
+  { title: 'News', value: 'news' },
   { title: 'Family', value: 'family' },
   { title: 'Sports', value: 'sports' },
   { title: 'Community', value: 'community' }

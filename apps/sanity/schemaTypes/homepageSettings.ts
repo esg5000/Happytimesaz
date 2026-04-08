@@ -1,8 +1,15 @@
 import { defineField, defineType } from 'sanity'
+import { editorialCategoryTagOptions } from './lib/editorialCategoryTags'
 
 const heroTileFields = [
   defineField({ name: 'title', type: 'string', title: 'Title', validation: (r) => r.required() }),
-  defineField({ name: 'categoryTag', type: 'string', title: 'Category tag', description: 'e.g. Food, Nightlife' }),
+  defineField({
+    name: 'categoryTag',
+    type: 'string',
+    title: 'Category tag',
+    description: 'Editorial section slug (News, Health & wellness, etc.)',
+    options: { list: [...editorialCategoryTagOptions], layout: 'dropdown' }
+  }),
   defineField({
     name: 'image',
     type: 'image',

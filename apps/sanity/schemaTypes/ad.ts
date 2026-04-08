@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { editorialCategoryTagOptions } from './lib/editorialCategoryTags'
 
 export default defineType({
   name: 'ad',
@@ -46,8 +47,9 @@ export default defineType({
       name: 'targetCategories',
       type: 'array',
       title: 'Target Categories',
-      description: 'Optional: Limit this ad to specific categories (slugs or names)',
-      of: [{ type: 'string' }]
+      description: 'Optional: Limit this ad to editorial section tags',
+      of: [{ type: 'string', options: { list: [...editorialCategoryTagOptions] } }],
+      options: { layout: 'tags' }
     }),
     defineField({
       name: 'advertiser',
@@ -87,10 +89,10 @@ export default defineType({
           { title: 'Nightlife — grid tile rectangle', value: 'nightlife_grid_tile' },
           { title: 'Nightlife — listings mid rectangle', value: 'nightlife_listings_mid' },
           { title: 'Nightlife — footer leaderboard', value: 'nightlife_footer_leaderboard' },
-          { title: 'Mushroom guide — top leaderboard', value: 'mushroom_guide_top' },
-          { title: 'Mushroom guide — mid rectangle', value: 'mushroom_guide_mid' },
-          { title: 'Mushroom guide — lower leaderboard', value: 'mushroom_guide_lower' },
-          { title: 'Mushroom guide — footer leaderboard', value: 'mushroom_footer_leaderboard' },
+          { title: 'Health & wellness guide — top leaderboard', value: 'mushroom_guide_top' },
+          { title: 'Health & wellness guide — mid rectangle', value: 'mushroom_guide_mid' },
+          { title: 'Health & wellness guide — lower leaderboard', value: 'mushroom_guide_lower' },
+          { title: 'Health & wellness guide — footer leaderboard', value: 'mushroom_footer_leaderboard' },
           { title: 'Events — listings in-feed leaderboard', value: 'events_listing_leaderboard' },
           { title: 'Homepage Major (legacy)', value: 'homepage_major' },
           { title: 'Homepage Sidebar (legacy)', value: 'homepage_sidebar' },

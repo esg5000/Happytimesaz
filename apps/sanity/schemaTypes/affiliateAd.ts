@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { editorialCategoryTagOptions } from './lib/editorialCategoryTags'
 
 export default defineType({
   name: 'affiliateAd',
@@ -41,7 +42,8 @@ export default defineType({
       name: 'categories',
       type: 'array',
       title: 'Categories',
-      of: [{ type: 'string' }]
+      of: [{ type: 'string', options: { list: [...editorialCategoryTagOptions] } }],
+      options: { layout: 'tags' }
     }),
     defineField({
       name: 'description',

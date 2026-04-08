@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { editorialCategoryTagOptions } from './lib/editorialCategoryTags'
 
 export default defineType({
   name: 'post',
@@ -11,7 +12,14 @@ export default defineType({
     defineField({ name: 'publishedAt', type: 'datetime' }),
     defineField({ name: 'readTime', type: 'number', description: 'Estimated minutes' }),
     defineField({ name: 'category', type: 'reference', to: [{ type: 'category' }] }),
-    defineField({ name: 'categories', type: 'array', of: [{ type: 'string' }] }),
+    defineField({
+      name: 'categories',
+      type: 'array',
+      title: 'Category tags',
+      description: 'Section tags (use Health & wellness instead of legacy mushroom/wellness)',
+      of: [{ type: 'string', options: { list: [...editorialCategoryTagOptions] } }],
+      options: { layout: 'tags' }
+    }),
     defineField({ name: 'heroImage', type: 'image', options: { hotspot: true } }),
     defineField({
       name: 'mainImage',
