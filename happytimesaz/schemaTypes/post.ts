@@ -29,6 +29,27 @@ export default defineType({
       options: { hotspot: true }
     }),
     defineField({
+      name: 'additionalImages',
+      title: 'Additional images',
+      type: 'array',
+      description: 'Extra images with alt text (galleries, inline sets, etc.)',
+      of: [
+        defineArrayMember({
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative text',
+              description: 'Describe the image for screen readers and SEO'
+            })
+          ]
+        })
+      ],
+      options: { layout: 'grid' }
+    }),
+    defineField({
       name: 'body',
       type: 'array',
       of: [
