@@ -103,14 +103,12 @@ export function RadioPlayer() {
       // Ignore errors when src is empty or points to the page URL
       const currentSrc = audioEl.src
       if (!currentSrc || currentSrc.includes(window.location.origin)) {
-        console.log('Ignoring error - no valid stream URL set')
         return
       }
       
       // Check current playing state from the audio element itself
       // Don't rely on closure variable to avoid dependency issues
       if (audioEl.paused && audioEl.readyState === 0) {
-        console.log('Ignoring error - not actively playing')
         return
       }
       
@@ -120,7 +118,6 @@ export function RadioPlayer() {
         switch (error.code) {
           case error.MEDIA_ERR_ABORTED:
             // Aborted errors are often false positives during source changes
-            console.log('Stream loading was aborted (likely during source change)')
             return
           case error.MEDIA_ERR_NETWORK:
             errorMessage = 'Network error while loading stream.'
@@ -145,31 +142,18 @@ export function RadioPlayer() {
       setError(null)
     }
 
-    const handleLoadStart = () => {
-      console.log('Audio load started:', audio.src)
-    }
-
     const handlePlaying = () => {
-      console.log('Audio is playing')
       setError(null)
-    }
-
-    const handleStalled = () => {
-      console.warn('Audio stream stalled')
     }
 
     audio.addEventListener('error', handleError)
     audio.addEventListener('canplay', handleCanPlay)
-    audio.addEventListener('loadstart', handleLoadStart)
     audio.addEventListener('playing', handlePlaying)
-    audio.addEventListener('stalled', handleStalled)
 
     return () => {
-    audio.removeEventListener('error', handleError)
-    audio.removeEventListener('canplay', handleCanPlay)
-    audio.removeEventListener('loadstart', handleLoadStart)
-    audio.removeEventListener('playing', handlePlaying)
-    audio.removeEventListener('stalled', handleStalled)
+      audio.removeEventListener('error', handleError)
+      audio.removeEventListener('canplay', handleCanPlay)
+      audio.removeEventListener('playing', handlePlaying)
     }
   }, []) // Remove playing from dependencies - use audioEl.paused instead
 
@@ -190,130 +174,108 @@ export function RadioPlayer() {
       
       try {
         setError(null)
-        console.log('=== Starting Playback ===')
-        console.log('URL:', current.url)
-        console.log('Audio element:', audio)
-        console.log('Current src:', audio.src)
-        console.log('ReadyState:', audio.readyState)
-        
+
         // Stop any current playback first
         audio.pause()
         audio.src = ''
-        
+
         // Small delay to ensure cleanup
         await new Promise(resolve => setTimeout(resolve, 50))
-        
+
         // Set the new source
         audio.src = current.url
-        console.log('Set src to:', audio.src)
-        
+
         // Load the stream
         audio.load()
-        console.log('Called load(), readyState:', audio.readyState)
-        
+
         // Wait for stream to be ready, then play
         await new Promise<void>((resolve, reject) => {
           let resolved = false
-          
+
           const cleanup = () => {
             audio.removeEventListener('canplay', handleCanPlay)
             audio.removeEventListener('canplaythrough', handleCanPlayThrough)
             audio.removeEventListener('loadeddata', handleLoadedData)
             audio.removeEventListener('error', handleError)
-            audio.removeEventListener('stalled', handleStalled)
           }
-          
+
           const handleCanPlay = async () => {
             if (resolved) return
-            console.log('canplay event fired, readyState:', audio.readyState)
             try {
               await audio.play()
-              console.log('✅ Playback started successfully!')
               setPlaying(true)
               resolved = true
               cleanup()
               resolve()
-            } catch (playErr: any) {
-              console.error('❌ Play failed:', playErr)
+            } catch (playErr: unknown) {
+              console.error('Radio play failed (canplay):', playErr)
               cleanup()
               reject(playErr)
             }
           }
-          
+
           const handleCanPlayThrough = async () => {
             if (resolved) return
-            console.log('canplaythrough event fired')
             try {
               await audio.play()
-              console.log('✅ Playback started (canplaythrough)!')
               setPlaying(true)
               resolved = true
               cleanup()
               resolve()
-            } catch (playErr: any) {
-              console.error('❌ Play failed:', playErr)
+            } catch (playErr: unknown) {
+              console.error('Radio play failed (canplaythrough):', playErr)
               cleanup()
               reject(playErr)
             }
           }
-          
+
           const handleLoadedData = () => {
-            console.log('loadeddata event fired, readyState:', audio.readyState)
             // Try to play if we have enough data
             if (audio.readyState >= 2 && !resolved) {
-              audio.play()
+              audio
+                .play()
                 .then(() => {
-                  console.log('✅ Playback started (loadeddata)!')
                   setPlaying(true)
                   resolved = true
                   cleanup()
                   resolve()
                 })
-                .catch((playErr: any) => {
-                  console.log('Play attempt failed, waiting for canplay:', playErr)
+                .catch(() => {
                   // Don't reject yet, wait for canplay
                 })
             }
           }
-          
+
           const handleError = (e: Event) => {
             if (resolved) return
             const audioEl = e.target as HTMLAudioElement
-            const error = audioEl.error
-            console.error('❌ Stream error:', error, 'Code:', error?.code)
+            const err = audioEl.error
+            console.error('Radio stream error:', err, 'code:', err?.code)
             resolved = true
             cleanup()
-            reject(new Error(`Stream error: ${error?.code || 'Unknown'}`))
+            reject(new Error(`Stream error: ${err?.code || 'Unknown'}`))
           }
-          
-          const handleStalled = () => {
-            console.warn('⚠️ Stream stalled')
-          }
-          
+
           // Try immediate play first (works for some streams)
-          audio.play()
+          audio
+            .play()
             .then(() => {
-              console.log('✅ Immediate play succeeded!')
               setPlaying(true)
               resolved = true
               cleanup()
               resolve()
             })
-            .catch((immediateErr: any) => {
-              console.log('Immediate play failed, waiting for stream:', immediateErr.name, immediateErr.message)
+            .catch(() => {
               // Continue to event-based approach
-              
-              // Add event listeners
               audio.addEventListener('canplay', handleCanPlay, { once: true })
               audio.addEventListener('canplaythrough', handleCanPlayThrough, { once: true })
               audio.addEventListener('loadeddata', handleLoadedData, { once: true })
               audio.addEventListener('error', handleError, { once: true })
-              audio.addEventListener('stalled', handleStalled)
-              
+
               // Timeout after 15 seconds
               setTimeout(() => {
                 if (!resolved && audio.readyState < 2) {
-                  console.error('❌ Stream load timeout')
+                  console.error('Radio stream load timeout')
                   resolved = true
                   cleanup()
                   reject(new Error('Stream load timeout - URL may be inaccessible'))
@@ -321,16 +283,17 @@ export function RadioPlayer() {
               }, 15000)
             })
         })
-      } catch (err: any) {
-        console.error('❌ Playback error:', err)
+      } catch (err: unknown) {
+        console.error('Radio playback error:', err)
         
         let errorMsg = 'Failed to play radio stream.'
-        if (err.name === 'NotAllowedError') {
+        const e = err as { name?: string; message?: string }
+        if (e.name === 'NotAllowedError') {
           errorMsg = 'Autoplay blocked. Please click play again.'
-        } else if (err.name === 'NotSupportedError') {
+        } else if (e.name === 'NotSupportedError') {
           errorMsg = 'Stream format not supported by your browser.'
-        } else if (err.message) {
-          errorMsg = err.message
+        } else if (e.message) {
+          errorMsg = e.message
         }
         
         setError(errorMsg)
@@ -338,7 +301,6 @@ export function RadioPlayer() {
         setOpen(true)
       }
     } else {
-      console.log('Pausing playback')
       audio.pause()
       setPlaying(false)
     }
@@ -353,8 +315,7 @@ export function RadioPlayer() {
     if (playing) {
       try {
         setError(null)
-        console.log('Changing station to:', station.url)
-        
+
         // Stop current playback
         audio.pause()
         audio.src = ''
@@ -390,9 +351,10 @@ export function RadioPlayer() {
             }
           }, 10000)
         })
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Station change error:', err)
-        setError(err.message || 'Failed to switch station.')
+        const msg = err instanceof Error ? err.message : ''
+        setError(msg || 'Failed to switch station.')
         setPlaying(false)
         setOpen(true)
       }
