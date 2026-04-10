@@ -59,6 +59,27 @@ export default defineType({
       }
     }),
     defineField({
+      name: 'featuredVideo',
+      type: 'file',
+      title: 'Featured video',
+      description: 'Primary featured video file (Sanity asset)',
+      options: {
+        accept: 'video/*'
+      }
+    }),
+    defineField({
+      name: 'section',
+      type: 'string',
+      title: 'Section',
+      description: 'Editorial section label (e.g. News, Features)'
+    }),
+    defineField({
+      name: 'visualStyle',
+      type: 'string',
+      title: 'Visual style',
+      description: 'Layout or presentation hint for the front end'
+    }),
+    defineField({
       name: 'body',
       type: 'array',
       of: [
