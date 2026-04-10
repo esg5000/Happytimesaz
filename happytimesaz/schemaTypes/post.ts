@@ -50,6 +50,15 @@ export default defineType({
       options: { layout: 'grid' }
     }),
     defineField({
+      name: 'video',
+      type: 'file',
+      title: 'Video',
+      description: 'Optional video file stored as a Sanity asset',
+      options: {
+        accept: 'video/*'
+      }
+    }),
+    defineField({
       name: 'body',
       type: 'array',
       of: [
