@@ -117,7 +117,19 @@ export default defineType({
             : 'City must be Phoenix, Scottsdale, Tempe, Mesa, Glendale, Chandler, or Surprise'
         ),
     }),
+    defineField({
+      name: 'searchCity',
+      title: 'Search city',
+      type: 'string',
+      description: 'City string used for search or indexing (may differ from the structured City field).',
+    }),
     defineField({ name: 'cuisine', title: 'Cuisine', type: 'string' }),
+    defineField({
+      name: 'cuisineType',
+      title: 'Cuisine type',
+      type: 'string',
+      description: 'Normalized or categorized cuisine (e.g. Italian, Mexican).',
+    }),
     defineField({
       name: 'rating',
       title: 'Rating',
@@ -145,6 +157,12 @@ export default defineType({
       validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
     }),
     defineField({
+      name: 'googlePlaceId',
+      title: 'Google Place ID',
+      type: 'string',
+      description: 'Google Places API place_id for this venue.',
+    }),
+    defineField({
       name: 'thumbnail',
       title: 'Thumbnail',
       type: 'string',
@@ -161,10 +179,22 @@ export default defineType({
       type: 'number',
     }),
     defineField({
+      name: 'location',
+      title: 'Location',
+      type: 'geopoint',
+      description: 'Map pin; can complement latitude and longitude.',
+    }),
+    defineField({
       name: 'isFeatured',
       title: 'Featured',
       type: 'boolean',
       initialValue: false,
+    }),
+    defineField({
+      name: 'source',
+      title: 'Source',
+      type: 'string',
+      description: 'Where this record came from (e.g. manual, google_places, import).',
     }),
     defineField({
       name: 'lastUpdated',
