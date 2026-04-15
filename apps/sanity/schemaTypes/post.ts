@@ -10,6 +10,8 @@ export default defineType({
     defineField({ name: 'slug', type: 'slug', options: { source: 'title', maxLength: 96 }, validation: (r) => r.required() }),
     defineField({ name: 'excerpt', type: 'text', rows: 3 }),
     defineField({ name: 'publishedAt', type: 'datetime' }),
+    defineField({ name: 'isFeatured', type: 'boolean', title: 'Featured', initialValue: false }),
+    defineField({ name: 'featuredAt', type: 'datetime', title: 'Featured at' }),
     defineField({ name: 'readTime', type: 'number', description: 'Estimated minutes' }),
     defineField({ name: 'category', type: 'reference', to: [{ type: 'category' }] }),
     defineField({
