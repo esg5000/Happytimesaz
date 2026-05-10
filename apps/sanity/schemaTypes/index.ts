@@ -9,6 +9,7 @@ import ad from './ad'
 import affiliateAd from './affiliateAd'
 import homepageSettings from './homepageSettings'
 import restaurant from './restaurant'
+import nightlife from './nightlife'
 
 export const schemaTypes = [
   category,
@@ -16,6 +17,7 @@ export const schemaTypes = [
   listing,
   dispensary,
   restaurant,
+  nightlife,
   deal,
   event,
   station,
