@@ -119,6 +119,17 @@ export default defineType({
       name: 'dealsScrapedAt',
       type: 'datetime',
       title: 'Deals Scraped At'
-    })
+    }),
+    defineField({
+      name: 'googlePlaceId',
+      type: 'string',
+      title: 'Google Place ID'
+    }),
+    defineField({
+      name: 'source',
+      type: 'string',
+      title: 'Source'
+    }),
+    imageWithAlt('image', 'Image')
   ]
 })
