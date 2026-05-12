@@ -65,43 +65,46 @@ export default defineType({
       description: 'Where this ad will be displayed',
       options: {
         list: [
-          { title: 'Homepage — leaderboard (below hero)', value: 'homepage_leaderboard' },
-          { title: 'Homepage — grid sponsored (every 6th card)', value: 'homepage_grid_sponsored' },
-          { title: 'Homepage — native card (after row 2)', value: 'homepage_native_mid' },
-          { title: 'Spotlight — Cannabis sidebar 300×250', value: 'spotlight_cannabis_sidebar' },
-          { title: 'Spotlight — Events sidebar 300×250', value: 'spotlight_events_sidebar' },
-          { title: 'Category — top leaderboard', value: 'category_leaderboard' },
-          { title: 'Category — sticky sidebar 300×250', value: 'category_sidebar_mpu' },
-          { title: 'Category — grid sponsored', value: 'category_grid_sponsored' },
-          { title: 'Category — native mid-grid', value: 'category_native_mid' },
-          { title: 'Article — inline banner (after intro)', value: 'article_inline_banner' },
-          { title: 'Article — sticky sidebar 300×250', value: 'article_sidebar_mpu' },
-          { title: 'Article — partner callout (mid)', value: 'article_partner_mid' },
-          { title: 'Article — related row affiliate', value: 'article_related_card' },
-          { title: 'Food — listings in-content (rectangle top)', value: 'food_in_content_top' },
-          { title: 'Food — listings in-content (leaderboard mid)', value: 'food_in_content_mid' },
-          { title: 'Food — listings in-content (rectangle lower)', value: 'food_in_content_lower' },
-          { title: 'Listing detail — sidebar MPU', value: 'listing_sidebar_mpu' },
-          { title: 'Cannabis — listing feed (leaderboard)', value: 'cannabis_listing_leaderboard' },
-          { title: 'Cannabis — listing feed (rectangle)', value: 'cannabis_listing_rectangle' },
-          { title: 'Cannabis — footer leaderboard', value: 'cannabis_footer_leaderboard' },
-          { title: 'Nightlife — listings top leaderboard', value: 'nightlife_listings_top' },
-          { title: 'Nightlife — grid tile rectangle', value: 'nightlife_grid_tile' },
-          { title: 'Nightlife — listings mid rectangle', value: 'nightlife_listings_mid' },
-          { title: 'Nightlife — footer leaderboard', value: 'nightlife_footer_leaderboard' },
-          { title: 'Health & wellness guide — top leaderboard', value: 'mushroom_guide_top' },
-          { title: 'Health & wellness guide — mid rectangle', value: 'mushroom_guide_mid' },
-          { title: 'Health & wellness guide — lower leaderboard', value: 'mushroom_guide_lower' },
-          { title: 'Health & wellness guide — footer leaderboard', value: 'mushroom_footer_leaderboard' },
-          { title: 'Events — listings in-feed leaderboard', value: 'events_listing_leaderboard' },
-          { title: 'Homepage Major (legacy)', value: 'homepage_major' },
-          { title: 'Homepage Sidebar (legacy)', value: 'homepage_sidebar' },
-          { title: 'Section Header', value: 'section_header' },
-          { title: 'Inline Banner (legacy)', value: 'inline_banner' },
-          { title: 'Footer Banner', value: 'footer_banner' }
+          { title: 'Top Banner', value: 'top-banner' },
+          { title: 'In-Feed', value: 'in-feed' },
+          { title: 'Sidebar', value: 'sidebar' },
+          { title: 'Bottom Banner', value: 'bottom-banner' }
         ],
         layout: 'dropdown'
       },
+      validation: (r) => r.required()
+    }),
+    defineField({
+      name: 'pageType',
+      type: 'string',
+      title: 'Page Type',
+      description: 'Which page type this ad targets',
+      options: {
+        list: [
+          { title: 'All Pages', value: 'all' },
+          { title: 'Home', value: 'home' },
+          { title: 'Category', value: 'category' },
+          { title: 'Article', value: 'article' },
+          { title: 'Dispensary', value: 'dispensary' }
+        ],
+        layout: 'dropdown'
+      },
+      validation: (r) => r.required()
+    }),
+    defineField({
+      name: 'deviceTarget',
+      type: 'string',
+      title: 'Device Target',
+      description: 'Which devices this ad targets',
+      options: {
+        list: [
+          { title: 'Both', value: 'both' },
+          { title: 'Desktop', value: 'desktop' },
+          { title: 'Mobile', value: 'mobile' }
+        ],
+        layout: 'radio'
+      },
+      initialValue: 'both',
       validation: (r) => r.required()
     }),
     defineField({
@@ -124,9 +127,7 @@ export default defineType({
       type: 'image',
       title: 'Image',
       description: 'Ad image (only used if Ad Type is Image)',
-      options: {
-        hotspot: true
-      },
+      options: { hotspot: true },
       hidden: ({ parent }) => parent?.adType !== 'image'
     }),
     defineField({
@@ -166,8 +167,8 @@ export default defineType({
       type: 'number',
       title: 'Priority',
       description: 'Higher numbers show first when multiple ads exist for the same placement',
-      initialValue: 1,
-      validation: (r) => r.min(0).max(100)
+      initialValue: 5,
+      validation: (r) => r.min(1).max(10)
     }),
     defineField({
       name: 'isActive',
@@ -193,4 +194,3 @@ export default defineType({
     })
   ]
 })
-

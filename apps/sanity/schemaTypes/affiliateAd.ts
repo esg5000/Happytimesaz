@@ -51,6 +51,69 @@ export default defineType({
       title: 'Description'
     }),
     defineField({
+      name: 'placement',
+      type: 'string',
+      title: 'Placement',
+      options: {
+        list: [
+          { title: 'Top Banner', value: 'top-banner' },
+          { title: 'In-Feed', value: 'in-feed' },
+          { title: 'Sidebar', value: 'sidebar' },
+          { title: 'Bottom Banner', value: 'bottom-banner' }
+        ],
+        layout: 'dropdown'
+      },
+      validation: (r) => r.required()
+    }),
+    defineField({
+      name: 'pageType',
+      type: 'string',
+      title: 'Page Type',
+      options: {
+        list: [
+          { title: 'All Pages', value: 'all' },
+          { title: 'Home', value: 'home' },
+          { title: 'Category', value: 'category' },
+          { title: 'Article', value: 'article' },
+          { title: 'Dispensary', value: 'dispensary' }
+        ],
+        layout: 'dropdown'
+      },
+      validation: (r) => r.required()
+    }),
+    defineField({
+      name: 'deviceTarget',
+      type: 'string',
+      title: 'Device Target',
+      options: {
+        list: [
+          { title: 'Both', value: 'both' },
+          { title: 'Desktop', value: 'desktop' },
+          { title: 'Mobile', value: 'mobile' }
+        ],
+        layout: 'radio'
+      },
+      initialValue: 'both',
+      validation: (r) => r.required()
+    }),
+    defineField({
+      name: 'priority',
+      type: 'number',
+      title: 'Priority',
+      initialValue: 5,
+      validation: (r) => r.min(1).max(10)
+    }),
+    defineField({
+      name: 'startDate',
+      type: 'date',
+      title: 'Start Date'
+    }),
+    defineField({
+      name: 'endDate',
+      type: 'date',
+      title: 'End Date'
+    }),
+    defineField({
       name: 'isActive',
       type: 'boolean',
       title: 'Is Active',
@@ -58,4 +121,3 @@ export default defineType({
     })
   ]
 })
-
