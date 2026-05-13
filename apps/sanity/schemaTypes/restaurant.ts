@@ -165,8 +165,12 @@ export default defineType({
     defineField({
       name: 'thumbnail',
       title: 'Thumbnail',
-      type: 'string',
-      description: 'Image URL for listings and cards',
+      type: 'image',
+      description: 'Primary photo shown on restaurant cards.',
+      options: { hotspot: true },
+      fields: [
+        defineField({ name: 'alt', title: 'Alt text', type: 'string' }),
+      ],
     }),
     defineField({
       name: 'latitude',
