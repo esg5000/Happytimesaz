@@ -101,7 +101,7 @@ export default defineType({
         }
       }],
       options: { layout: 'tags' },
-      hidden: ({ parent }) => parent?.pageType !== 'category'
+      hidden: ({ parent }) => parent?.pageType !== 'category' && parent?.pageType !== 'article'
     }),
     defineField({
       name: 'deviceTarget',
