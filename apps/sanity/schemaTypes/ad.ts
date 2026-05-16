@@ -47,9 +47,23 @@ export default defineType({
       name: 'targetCategories',
       type: 'array',
       title: 'Target Categories',
-      description: 'Optional: Limit this ad to editorial section tags',
-      of: [{ type: 'string', options: { list: [...editorialCategoryTagOptions] } }],
-      options: { layout: 'tags' }
+      description: 'Which category pages this ad should appear on',
+      of: [{
+        type: 'string',
+        options: {
+          list: [
+            { title: 'Food', value: 'food' },
+            { title: 'News', value: 'news' },
+            { title: 'Cannabis', value: 'cannabis' },
+            { title: 'Nightlife', value: 'nightlife' },
+            { title: 'Health & Wellness', value: 'health-wellness' },
+            { title: 'Events', value: 'events' },
+            { title: 'Sports', value: 'sports' }
+          ]
+        }
+      }],
+      options: { layout: 'tags' },
+      hidden: ({ parent }) => parent?.pageType !== 'category'
     }),
     defineField({
       name: 'advertiser',

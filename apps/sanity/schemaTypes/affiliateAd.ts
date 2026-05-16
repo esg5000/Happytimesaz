@@ -82,6 +82,28 @@ export default defineType({
       validation: (r) => r.required()
     }),
     defineField({
+      name: 'targetCategories',
+      type: 'array',
+      title: 'Target Categories',
+      description: 'Which category pages this ad should appear on',
+      of: [{
+        type: 'string',
+        options: {
+          list: [
+            { title: 'Food', value: 'food' },
+            { title: 'News', value: 'news' },
+            { title: 'Cannabis', value: 'cannabis' },
+            { title: 'Nightlife', value: 'nightlife' },
+            { title: 'Health & Wellness', value: 'health-wellness' },
+            { title: 'Events', value: 'events' },
+            { title: 'Sports', value: 'sports' }
+          ]
+        }
+      }],
+      options: { layout: 'tags' },
+      hidden: ({ parent }) => parent?.pageType !== 'category'
+    }),
+    defineField({
       name: 'deviceTarget',
       type: 'string',
       title: 'Device Target',
