@@ -73,35 +73,37 @@ export default defineType({
       description: 'Which page type this ad targets',
       options: {
         list: [
-          { title: 'All Pages', value: 'all' },
-          { title: 'Home', value: 'home' },
-          { title: 'Category', value: 'category' },
-          { title: 'Article', value: 'article' },
-          { title: 'Dispensary', value: 'dispensary' }
+          { title: 'All Pages', value: 'all-pages' },
+          { title: 'All Main Pages', value: 'all-main-pages' },
+          { title: 'Homepage', value: 'homepage' },
+          { title: 'Category Pages', value: 'category-pages' },
+          { title: 'Article Pages', value: 'article-pages' },
+          { title: 'Dispensary Pages', value: 'dispensary-pages' }
         ],
         layout: 'dropdown'
       },
       validation: (r) => r.required()
     }),
     defineField({
-      name: 'targetCategories',
-      type: 'array',
-      title: 'Target Categories',
-      description: 'Which category/article pages this ad should appear on',
-      of: [{ type: 'string' }],
+      name: 'targetCategory',
+      type: 'string',
+      title: 'Target Category',
+      description: 'Which category pages this ad should appear on',
       options: {
         list: [
+          { title: 'All Categories', value: 'all-categories' },
           { title: 'Food', value: 'food' },
           { title: 'News', value: 'news' },
           { title: 'Cannabis', value: 'cannabis' },
           { title: 'Nightlife', value: 'nightlife' },
           { title: 'Health & Wellness', value: 'health-wellness' },
           { title: 'Events', value: 'events' },
-          { title: 'Sports', value: 'sports' }
+          { title: 'Sports', value: 'sports' },
+          { title: 'Classes', value: 'classes' }
         ],
-        layout: 'tags'
+        layout: 'dropdown'
       },
-      hidden: ({ parent }) => parent?.pageType !== 'category' && parent?.pageType !== 'article'
+      hidden: ({ parent }) => parent?.pageType !== 'category-pages' && parent?.pageType !== 'article-pages'
     }),
     defineField({
       name: 'deviceTarget',
