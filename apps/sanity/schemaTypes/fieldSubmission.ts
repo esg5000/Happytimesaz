@@ -23,11 +23,13 @@ export default defineType({
       title: 'Category',
       options: {
         list: [
-          { title: 'Health', value: 'health' },
-          { title: 'Sports', value: 'sports' },
-          { title: 'Local', value: 'local' },
-          { title: 'Lifestyle', value: 'lifestyle' },
+          { title: 'Food', value: 'food' },
+          { title: 'News', value: 'news' },
+          { title: 'Cannabis', value: 'cannabis' },
+          { title: 'Nightlife', value: 'nightlife' },
+          { title: 'Health & Wellness', value: 'health-wellness' },
           { title: 'Events', value: 'events' },
+          { title: 'Sports', value: 'sports' },
         ],
         layout: 'radio',
       },
