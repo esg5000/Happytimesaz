@@ -10,7 +10,6 @@ import affiliateAd from './affiliateAd'
 import homepageSettings from './homepageSettings'
 import restaurant from './restaurant'
 import nightlife from './nightlife'
-import fieldSubmission from './fieldSubmission'
 
 export const schemaTypes = [
   category,
@@ -25,5 +24,4 @@ export const schemaTypes = [
   ad,
   affiliateAd,
   homepageSettings,
-  fieldSubmission,
 ]
