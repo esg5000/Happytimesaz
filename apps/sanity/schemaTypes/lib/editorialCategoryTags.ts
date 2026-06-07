@@ -9,5 +9,6 @@ export const editorialCategoryTagOptions = [
   { title: 'News', value: 'news' },
   { title: 'Health & wellness', value: 'health-wellness' },
   { title: 'Events', value: 'events' },
-  { title: 'Classes', value: 'classes' }
+  { title: 'Classes', value: 'classes' },
+  { title: 'Sports', value: 'sports' }
 ] as const
