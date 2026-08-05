@@ -1,32 +1,15 @@
 {
-  "name": "happytimesaz-fullstack",
+  "name": "happytimesaz-sanity",
   "private": true,
   "packageManager": "pnpm@9.12.3",
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/*"
   ],
-  "pnpm": {
-    "overrides": {
-      "@next/swc-darwin-arm64": "15.5.14",
-      "@next/swc-darwin-x64": "15.5.14",
-      "@next/swc-linux-arm64-gnu": "15.5.14",
-      "@next/swc-linux-arm64-musl": "15.5.14",
-      "@next/swc-linux-x64-gnu": "15.5.14",
-      "@next/swc-linux-x64-musl": "15.5.14",
-      "@next/swc-win32-arm64-msvc": "15.5.14",
-      "@next/swc-win32-x64-msvc": "15.5.14"
-    }
-  },
   "scripts": {
-    "dev": "pnpm -r dev",
-    "build": "pnpm --filter @happytimesaz/web run build",
-    "lint": "pnpm -r lint",
-    "format": "pnpm -r format",
+    "dev": "pnpm --filter @happytimesaz/sanity run dev",
+    "build": "pnpm --filter @happytimesaz/sanity run build",
+    "deploy": "pnpm --filter @happytimesaz/sanity run deploy",
+    "format": "pnpm --filter @happytimesaz/sanity run format",
     "sanity:dev": "npx pnpm@9.12.3 --filter @happytimesaz/sanity run dev",
     "sanity:build": "npx pnpm@9.12.3 --filter @happytimesaz/sanity run build",
     "sanity:deploy": "npx pnpm@9.12.3 --filter @happytimesaz/sanity run deploy"
