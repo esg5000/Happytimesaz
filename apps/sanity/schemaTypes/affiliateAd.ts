@@ -51,6 +51,19 @@ export default defineType({
       title: 'Description'
     }),
     defineField({
+      name: 'cta',
+      type: 'string',
+      title: 'Call to Action',
+      description: 'Button or link text',
+      initialValue: 'Shop Now'
+    }),
+    defineField({
+      name: 'network',
+      type: 'string',
+      title: 'Affiliate Network',
+      description: 'Program this link belongs to (e.g. Amazon Associates, Impact, ShareASale) — for internal reporting, not shown to readers'
+    }),
+    defineField({
       name: 'placement',
       type: 'string',
       title: 'Placement',
