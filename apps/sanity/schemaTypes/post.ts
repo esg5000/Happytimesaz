@@ -22,7 +22,19 @@ export default defineType({
       of: [{ type: 'string', options: { list: [...editorialCategoryTagOptions] } }],
       options: { layout: 'tags' }
     }),
-    defineField({ name: 'heroImage', type: 'image', options: { hotspot: true } }),
+    defineField({
+      name: 'heroImage',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alternative text',
+          type: 'string',
+          description: 'Describes the image for accessibility and SEO. Optional — existing images won\'t have this set until re-uploaded or edited.',
+        }),
+      ],
+    }),
     defineField({
       name: 'mainImage',
       type: 'image',
