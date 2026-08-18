@@ -18,12 +18,18 @@ export default defineType({
       advertiser: 'advertiser',
       placement: 'placement',
       active: 'isActive',
+      endDate: 'endDate',
       image: 'image'
     },
-    prepare({ title, advertiser, placement, active, image }) {
+    prepare({ title, advertiser, placement, active, endDate, image }) {
+      // "YYYY-MM-DD" string compare, matching the frontend's date filter
+      // in lib/sanity.ts — avoids timezone drift from Date object parsing.
+      const today = new Date().toISOString().slice(0, 10)
+      const isExpired = Boolean(endDate) && endDate < today
+      const status = active === false ? ' • Inactive' : isExpired ? ' • Expired — still marked active' : ''
       return {
         title: title || 'Untitled Ad',
-        subtitle: `${advertiser || 'No Advertiser'} • ${placement || 'No Placement'}${active === false ? ' • Inactive' : ''}`,
+        subtitle: `${advertiser || 'No Advertiser'} • ${placement || 'No Placement'}${status}`,
         media: image
       }
     }
