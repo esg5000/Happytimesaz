@@ -73,6 +73,22 @@ export default defineType({
       validation: (r) => r.required()
     }),
     defineField({
+      name: 'adSize',
+      type: 'string',
+      title: 'Ad Size',
+      description: 'Creative dimensions for this ad slot, per the rate card',
+      options: {
+        list: [
+          { title: 'Billboard (970×250)', value: 'billboard-970x250' },
+          { title: 'Leaderboard (728×90)', value: 'leaderboard-728x90' },
+          { title: 'MPU (300×250)', value: 'mpu-300x250' },
+          { title: 'Half Page (300×600)', value: 'halfpage-300x600' }
+        ],
+        layout: 'dropdown'
+      },
+      validation: (r) => r.required()
+    }),
+    defineField({
       name: 'pageType',
       type: 'string',
       title: 'Page Type',
