@@ -61,6 +61,22 @@ export default defineType({
     }),
     defineField({ name: 'address', type: 'string', title: 'Address' }),
     defineField({ name: 'city', type: 'string', title: 'City' }),
+    defineField({
+      name: 'latitude',
+      title: 'Latitude',
+      type: 'number'
+    }),
+    defineField({
+      name: 'longitude',
+      title: 'Longitude',
+      type: 'number'
+    }),
+    defineField({
+      name: 'location',
+      title: 'Location',
+      type: 'geopoint',
+      description: 'Map pin; can complement latitude and longitude.'
+    }),
     defineField({ name: 'phone', type: 'string', title: 'Phone' }),
     defineField({
       name: 'website',
