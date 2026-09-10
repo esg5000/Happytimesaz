@@ -27,16 +27,41 @@ export default defineType({
       validation: (r) => r.required()
     }),
     defineField({
+      name: 'adType',
+      type: 'string',
+      title: 'Ad Type',
+      description: 'Type of advertisement content',
+      options: {
+        list: [
+          { title: 'Image', value: 'image' },
+          { title: 'HTML', value: 'html' }
+        ],
+        layout: 'radio'
+      },
+      initialValue: 'image',
+      validation: (r) => r.required()
+    }),
+    defineField({
       name: 'image',
       type: 'image',
       title: 'Image',
-      options: { hotspot: true }
+      description: 'Ad image (only used if Ad Type is Image)',
+      options: { hotspot: true },
+      hidden: ({ parent }) => parent?.adType !== 'image'
+    }),
+    defineField({
+      name: 'html',
+      type: 'text',
+      title: 'HTML Code',
+      description: 'HTML/script code for the ad (only used if Ad Type is HTML) — e.g. a full AWIN <a><img></a> banner block with tracking URLs',
+      hidden: ({ parent }) => parent?.adType !== 'html'
     }),
     defineField({
       name: 'linkUrl',
       type: 'url',
       title: 'Link URL',
-      validation: (r) => r.required().uri({ scheme: ['http', 'https'] })
+      description: 'Destination URL when ad is clicked (an HTML snippet carries its own link, so this is optional when Ad Type is HTML)',
+      validation: (r) => r.uri({ scheme: ['http', 'https'] })
     }),
     defineField({
       name: 'categories',
