@@ -107,17 +107,34 @@ export default defineType({
       name: 'adSize',
       type: 'string',
       title: 'Ad Size',
-      description: 'Creative dimensions for this ad slot, per the rate card',
+      description: 'Creative dimensions for this ad slot, per the rate card. Pick Custom if the creative does not match any preset (e.g. a Fever 425×451 or other advertiser-supplied size).',
       options: {
         list: [
           { title: 'Billboard (970×250)', value: 'billboard-970x250' },
           { title: 'Leaderboard (728×90)', value: 'leaderboard-728x90' },
           { title: 'MPU (300×250)', value: 'mpu-300x250' },
-          { title: 'Half Page (300×600)', value: 'halfpage-300x600' }
+          { title: 'Half Page (300×600)', value: 'halfpage-300x600' },
+          { title: 'Custom', value: 'custom' }
         ],
         layout: 'dropdown'
       },
       validation: (r) => r.required()
+    }),
+    defineField({
+      name: 'customWidth',
+      type: 'number',
+      title: 'Custom Width (px)',
+      description: 'Actual creative width in pixels — only used if Ad Size is Custom',
+      hidden: ({ parent }) => parent?.adSize !== 'custom',
+      validation: (r) => r.positive().integer()
+    }),
+    defineField({
+      name: 'customHeight',
+      type: 'number',
+      title: 'Custom Height (px)',
+      description: 'Actual creative height in pixels — only used if Ad Size is Custom',
+      hidden: ({ parent }) => parent?.adSize !== 'custom',
+      validation: (r) => r.positive().integer()
     }),
     defineField({
       name: 'pageType',
