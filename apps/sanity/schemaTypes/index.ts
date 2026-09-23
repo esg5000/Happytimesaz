@@ -11,6 +11,7 @@ import homepageSettings from './homepageSettings'
 import restaurant from './restaurant'
 import nightlife from './nightlife'
 import syncRun from './syncRun'
+import topicDiscoveryDebugLog from './topicDiscoveryDebugLog'
 
 export const schemaTypes = [
   category,
@@ -26,4 +27,5 @@ export const schemaTypes = [
   affiliateAd,
   homepageSettings,
   syncRun,
+  topicDiscoveryDebugLog,
 ]
